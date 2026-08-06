@@ -1,0 +1,29 @@
+# Competition data (not redistributable through this repository)
+/train.csv
+/test.csv
+/sample_submission.csv
+
+# Generated predictions and model artifacts
+/submission*.csv
+/artifacts/
+*.cbm
+*.pkl
+*.joblib
+*.npy
+
+# Local Python environments and caches
+/python_packages/
+/.venv/
+/venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
