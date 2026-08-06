@@ -34,3 +34,6 @@ meaningful error diversity. Test predictions are averaged within each model
 family across folds, converted to percentile ranks, and then blended using
 weights fixed from out-of-fold results.
 
+V2 confirmed why this rule matters: the strongest individual model family
+scored 0.962433 OOF, while equal and preset diversity blends scored 0.962114
+and 0.962093. The single family was selected rather than forcing a blend.
