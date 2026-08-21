@@ -14,7 +14,9 @@ added only after the corresponding submission is evaluated.
 - Selected an 80% reconstructed / 20% v2 percentile-rank blend at 0.963457
   OOF AUC.
 - Added v3 unit tests and reproducibility documentation.
-- Leaderboard score: pending.
+- Leaderboard score: **0.96459**.
+- Outcome: underperformed v2 by 0.00065 despite a 0.001024 OOF improvement;
+  v2 remains the champion model.
 
 ## v2.0.0 - 2026-08-06
 

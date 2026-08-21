@@ -10,7 +10,11 @@ focuses on ranking quality rather than probability calibration.
 |---|---|---:|---:|---|
 | v1.0.0 | LightGBM, 1,800 trees | 0.963380 | **0.96524** | `submission_lgbm.csv` |
 | v2.0.0 | Five-fold LightGBM ensemble | 0.962433 OOF | **0.96524** | `submission_v2.csv` |
-| v3.0.0 | Reconstructed features + v2 rank blend | **0.963457 OOF** | Pending | `submission_v3.csv` |
+| v3.0.0 | Reconstructed features + v2 rank blend | **0.963457 OOF** | 0.96459 | `submission_v3.csv` |
+
+V2 remains the current leaderboard champion at **0.96524**. V3 is retained as
+a documented negative result: its improved OOF score did not transfer to the
+leaderboard.
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine

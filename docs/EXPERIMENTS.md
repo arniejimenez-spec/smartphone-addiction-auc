@@ -187,4 +187,20 @@ exceeds the predefined 0.00002 minimum blend-gain threshold.
 - Unique predictions: 275,135 of 296,302
 - V2/V3 test rank correlation: 0.9982310
 - SHA-256: `3f574728b61abfb3b5a03ab16d65be97635e69395c166b3aca9a19c9172de998`
-- Public leaderboard AUC: pending
+- Public leaderboard AUC: **0.96459**
+- Leaderboard delta versus v2: **-0.00065**
+
+### Outcome and interpretation
+
+The 0.001024 OOF improvement did not transfer to the public leaderboard. V3
+therefore does not replace v2 as the champion. The disagreement is evidence
+that the current IID folds do not fully represent the public evaluation set.
+The most plausible contributors are the known train/test missing-pattern shift
+and transductive reconstruction models learning feature relationships whose
+utility varies under that shift. Public-leaderboard sampling noise may also
+contribute, but the result is treated as a genuine warning rather than noise.
+
+Future experiments should use validation that deliberately mirrors test
+missingness, including adversarially weighted or missing-pattern-stratified
+fold scoring. Feature changes should report both ordinary OOF AUC and a
+test-likeness-weighted AUC before submission.

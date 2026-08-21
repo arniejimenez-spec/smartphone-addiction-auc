@@ -58,3 +58,11 @@ Separate models for zero, one, and two-or-more missing fields were tested on
 the exact first fold. They underperformed the full reconstructed model within
 every corresponding slice by 0.00144, 0.00309, and 0.00343 AUC. The full model
 benefits from substantially more training rows and was retained.
+
+## OOF-to-leaderboard mismatch
+
+V3 improved ordinary five-fold OOF AUC by 0.001024 but scored 0.00065 below v2
+on the public leaderboard. Ordinary IID folds are therefore necessary but not
+sufficient for this competition. New feature pipelines—especially those that
+interact with missingness—must also be evaluated under a test-like validation
+view derived from missing-pattern distributions or adversarial weights.
