@@ -10,6 +10,7 @@ focuses on ranking quality rather than probability calibration.
 |---|---|---:|---:|---|
 | v1.0.0 | LightGBM, 1,800 trees | 0.963380 | **0.96524** | `submission_lgbm.csv` |
 | v2.0.0 | Five-fold LightGBM ensemble | 0.962433 OOF | **0.96524** | `submission_v2.csv` |
+| v3.0.0 | Reconstructed features + v2 rank blend | **0.963457 OOF** | Pending | `submission_v3.csv` |
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine
@@ -23,6 +24,7 @@ numeric features, three categorical features, and substantial missingness.
 |-- train_lgbm.py        # LightGBM holdout validation
 |-- train_final.py       # Full-data v1 model and submission generation
 |-- train_v2.py          # Resumable five-fold validation and ensembling
+|-- train_v3.py          # Feature reconstruction, specialists, and v3 blend
 |-- analyze_shift.py     # Adversarial train-vs-test validation
 |-- docs/
 |   |-- EXPERIMENTS.md   # Experiment ledger and leaderboard results
@@ -67,6 +69,24 @@ The final v2 artifact was rebuilt from the 15 completed LightGBM fold
 checkpoints. The strongest validated candidate was the five-fold `lgbm_c`
 ensemble; cross-family blends were rejected because they reduced OOF AUC. The
 selected file is written to `artifacts/v2/full/submission_v2.csv`.
+
+## Reproduce v3
+
+V3 reconstructs five predictable missing numeric fields using label-free
+feature models trained on the combined train/test covariates. Target models
+remain strictly out-of-fold. Reconstruction and fold predictions are cached:
+
+```powershell
+python train_v3.py --folds 5 `
+  --target-iterations 2000 `
+  --reconstruction-iterations 500 `
+  --run-name full --resume --skip-specialists
+```
+
+Missingness specialists were evaluated on fold 1 and rejected because they
+underperformed the reconstructed full model in every missingness bucket. The
+selected v3 submission is an 80% reconstructed / 20% v2 percentile-rank blend,
+written to `artifacts/v3/full/submission_v3.csv`.
 
 ## Versioning policy
 

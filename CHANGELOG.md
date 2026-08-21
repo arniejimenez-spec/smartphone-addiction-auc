@@ -3,6 +3,19 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
+## v3.0.0 - 2026-08-21
+
+- Added label-free reconstruction for five predictable missing fields.
+- Cached reconstructed covariates and all target-model fold predictions.
+- Increased the target-model ceiling from 1,200 to 2,000 iterations.
+- Improved complete five-fold OOF AUC from 0.962433 to 0.963413.
+- Evaluated missingness specialists and rejected them after consistent
+  first-fold underperformance across all three missingness buckets.
+- Selected an 80% reconstructed / 20% v2 percentile-rank blend at 0.963457
+  OOF AUC.
+- Added v3 unit tests and reproducibility documentation.
+- Leaderboard score: pending.
+
 ## v2.0.0 - 2026-08-06
 
 - Added fixed five-fold stratified out-of-fold validation.

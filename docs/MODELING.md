@@ -37,3 +37,24 @@ weights fixed from out-of-fold results.
 V2 confirmed why this rule matters: the strongest individual model family
 scored 0.962433 OOF, while equal and preset diversity blends scored 0.962114
 and 0.962093. The single family was selected rather than forcing a blend.
+
+## Label-free feature reconstruction
+
+V3 addresses the dominant error source: 61% of training rows have at least one
+missing field, and v2 AUC declined sharply as missing count increased. Five
+LightGBM regressors learn predictable feature-to-feature relationships using
+combined train/test covariates without access to `addicted_label`. Actual
+observed values are preserved; only missing values are reconstructed. Both the
+original native-missing columns and reconstructed columns enter the target
+model, allowing it to account for imputation uncertainty through the existing
+missing indicators.
+
+This transductive step uses test covariates but never test labels or target
+proxies. Model selection remains based on target-strict out-of-fold predictions.
+
+## Specialist rejection
+
+Separate models for zero, one, and two-or-more missing fields were tested on
+the exact first fold. They underperformed the full reconstructed model within
+every corresponding slice by 0.00144, 0.00309, and 0.00343 AUC. The full model
+benefits from substantially more training rows and was retained.
