@@ -248,9 +248,15 @@ challenger weight passed both gates.
 - V2/V4 test rank correlation: 0.9999847
 - V3/V4 test rank correlation: 0.9982480
 - SHA-256: `120f12c9cdf085d1f97b9d4f68600bd87ad6deb41c1ff0d0d40500fa76990593`
-- Public leaderboard AUC: pending
+- Public leaderboard AUC: **0.96357**
+- Leaderboard delta versus v2: **-0.00167**
+- Leaderboard delta versus v3: **-0.00102**
 
 ### Decision
 
-V4 is approved as a low-risk leaderboard challenger, not as the new champion.
-V2 remains the incumbent at 0.96524 until v4 is evaluated externally.
+V4 does not replace v2. Its very small local gains failed to transfer and the
+submission scored below both v2 and v3. Test-density weighting is therefore
+retained as a diagnostic but rejected as a model-selection gate for this
+competition. The 0.9999847 V2/V4 test rank correlation also confirms that
+closely related LightGBM blends are not producing useful new leaderboard
+signal. V2 remains the champion at 0.96524.

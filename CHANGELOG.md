@@ -16,7 +16,10 @@ added only after the corresponding submission is evaluated.
 - Improved ordinary OOF AUC from 0.9624332 to 0.9624633 and test-like weighted
   OOF AUC from 0.9631260 to 0.9631460.
 - Added v4 unit tests, resumable fold checkpoints, and submission validation.
-- Leaderboard score: pending; v2 remains the incumbent until evaluated.
+- Leaderboard score: **0.96357**.
+- Outcome: underperformed v2 by 0.00167 and v3 by 0.00102; adversarial density
+  weighting did not make local validation predictive of leaderboard movement.
+  V2 remains the champion model.
 
 ## v3.0.0 - 2026-08-21
 

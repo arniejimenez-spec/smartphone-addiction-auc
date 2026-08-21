@@ -82,5 +82,18 @@ selecting the best point on one OOF curve after the v3 leaderboard mismatch.
 
 Density weighting did not make the standalone target model stronger. It did
 change enough pairwise rankings to complement v2: the 25% challenger blend
-gained 0.0000302 ordinary AUC and 0.00001996 density-weighted AUC. V4 is
-therefore a cautious leaderboard challenger, while v2 remains the incumbent.
+gained 0.0000302 ordinary AUC and 0.00001996 density-weighted AUC locally. That
+evidence advanced v4 as a cautious challenger while v2 remained the incumbent.
+
+## V4 leaderboard outcome
+
+V4 scored 0.96357, trailing v2 by 0.00167 despite passing both local gates.
+Observable train/test density shift therefore does not explain the leaderboard
+mismatch well enough to guide small ranking changes. Adversarially weighted OOF
+AUC should remain a diagnostic, not a release criterion, for future versions.
+
+The two failed challengers also show that improvements smaller than roughly
+0.001 OOF are not persuasive here, and even v3's larger 0.001024 gain did not
+transfer. Future candidates should introduce genuinely different signal and be
+tested across multiple split seeds or structurally different validation sets;
+small blends of closely correlated LightGBM predictions should not be submitted.
