@@ -97,3 +97,28 @@ The two failed challengers also show that improvements smaller than roughly
 transfer. Future candidates should introduce genuinely different signal and be
 tested across multiple split seeds or structurally different validation sets;
 small blends of closely correlated LightGBM predictions should not be submitted.
+
+## V5 model-family and robustness policy
+
+V5 changes model family to XGBoost histogram trees. It uses v2's derived and
+individual missingness features, drops the high-cardinality categorical missing
+pattern, and one-hot encodes the three original categorical fields. This keeps
+the useful feature vocabulary while changing tree construction, regularization,
+category handling, and ranking errors. V2/V5 test rank correlation is 0.99484,
+substantially lower than the failed V2/V4 correlation of 0.99998.
+
+Before full training, XGBoost must beat label-strict v2 OOF predictions on the
+first 20% fold from split seeds 42, 17, and 83. Every gain must be at least
+0.0005 and the mean must be at least 0.0010. Observed gains were +0.002225,
++0.001994, and +0.002264, for a +0.002161 mean.
+
+The first full run placed every fold's best iteration at the 2,000-tree ceiling.
+A pre-declared fold-1 check required at least +0.0001 to extend training; the
+3,000-tree ceiling gained +0.000267 and stopped near iteration 2,808. The longer
+ceiling then improved all five folds and raised complete OOF AUC from 0.964504
+to 0.964712.
+
+Standalone XGBoost is selected. The best rank blend scored 0.964727, only
+0.000014 above the standalone model, so it failed the 0.0001 blend-gain rule.
+This prevents another leaderboard submission dominated by a nearly identical
+incumbent ranking.

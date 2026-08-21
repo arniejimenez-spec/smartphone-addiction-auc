@@ -12,11 +12,13 @@ focuses on ranking quality rather than probability calibration.
 | v2.0.0 | Five-fold LightGBM ensemble | 0.962433 OOF | **0.96524** | `submission_v2.csv` |
 | v3.0.0 | Reconstructed features + v2 rank blend | **0.963457 OOF** | 0.96459 | `submission_v3.csv` |
 | v4.0.0 | V2 + test-density-weighted rank blend | 0.962463 OOF | 0.96357 | `submission_v4.csv` |
+| v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | Pending | `submission_v5.csv` |
 
 V2 remains the current leaderboard champion at **0.96524**. V3 is retained as
 a documented negative result: its improved OOF score did not transfer to the
 leaderboard. V4 is also a documented negative result: adversarially weighted
-validation did not repair the local-to-leaderboard mismatch.
+validation did not repair the local-to-leaderboard mismatch. V5 is a
+multi-seed-validated, structurally different challenger pending evaluation.
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine
@@ -33,6 +35,7 @@ numeric features, three categorical features, and substantial missingness.
 |-- train_v3.py          # Feature reconstruction, specialists, and v3 blend
 |-- validate_v4.py       # Cross-fitted train-vs-test density weights
 |-- train_v4.py          # Dual-gated density-weighted v4 challenger
+|-- train_v5.py          # Multi-seed-gated XGBoost pipeline
 |-- analyze_shift.py     # Initial adversarial train-vs-test validation
 |-- docs/
 |   |-- EXPERIMENTS.md   # Experiment ledger and leaderboard results
@@ -110,6 +113,23 @@ python train_v4.py --run-name full --iterations 1200 --resume
 
 The sole dual-gate candidate is 75% v2 plus 25% density-weighted LightGBM. Its
 selected file is written to `artifacts/v4/full/submission_v4.csv`.
+
+## Reproduce v5
+
+V5 changes model family to histogram-based XGBoost with one-hot categorical
+features. It must first beat label-strict v2 OOF predictions on three different
+80/20 splits before full training is allowed:
+
+```powershell
+python train_v5.py --mode gate --run-name gate `
+  --validation-seeds 42,17,83 --iterations 2000
+python train_v5.py --mode full --run-name full3000 `
+  --gate-run-name gate --iterations 3000 --resume
+```
+
+The final model is standalone XGBoost. A v2 blend was rejected because its
+0.000014 OOF gain was below the 0.0001 blend threshold. The selected submission
+is written to `artifacts/v5/full3000/submission_v5.csv`.
 
 ## Versioning policy
 
