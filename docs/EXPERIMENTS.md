@@ -107,4 +107,6 @@ not justify approximately another hour of computation.
 - Prediction mean: 0.7094520
 - V1/V2 test rank correlation: 0.9969586
 - SHA-256: `c18cb72657da0d5e8fb8412526001cbdb12a7bae1a802384bb77b94fb16bf90e`
-- Public leaderboard AUC: pending
+- Public leaderboard AUC: **0.96524**
+- Outcome: tied v1; the v1/v2 rank correlation of 0.9969586 correctly
+  indicated that the new fold ensemble did not materially change test ranking.

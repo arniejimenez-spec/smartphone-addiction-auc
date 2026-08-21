@@ -9,7 +9,7 @@ focuses on ranking quality rather than probability calibration.
 | Version | Model | Local validation | Leaderboard | Submission |
 |---|---|---:|---:|---|
 | v1.0.0 | LightGBM, 1,800 trees | 0.963380 | **0.96524** | `submission_lgbm.csv` |
-| v2.0.0 | Five-fold LightGBM ensemble | 0.962433 OOF | Pending | `submission_v2.csv` |
+| v2.0.0 | Five-fold LightGBM ensemble | 0.962433 OOF | **0.96524** | `submission_v2.csv` |
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine
