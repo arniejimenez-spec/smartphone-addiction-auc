@@ -204,3 +204,53 @@ Future experiments should use validation that deliberately mirrors test
 missingness, including adversarially weighted or missing-pattern-stratified
 fold scoring. Feature changes should report both ordinary OOF AUC and a
 test-likeness-weighted AUC before submission.
+
+## v4.0.0 - Test-density-weighted conservative blend
+
+Date: 2026-08-21
+
+### Shift validation
+
+A five-fold LightGBM domain classifier was trained on combined train/test
+covariates without `addicted_label`. Its complete out-of-fold adversarial AUC
+was **0.5640617**. The resulting normalized density weights ranged from
+0.346728 to 3.398659, with an effective training size of 664,909 rows.
+
+Exact missing-pattern weighting and full adversarial density weighting both
+continued to prefer v3 in local scoring, despite v3's lower leaderboard score.
+The v3 mismatch is therefore not explained by observable covariate shift alone,
+and reconstructed features were excluded from the v4 target model.
+
+### Target model and blend gate
+
+The challenger uses v2's `lgbm_c` configuration, raw covariates, derived
+features, and explicit missingness features. It changes only the target-model
+training weights. The same five stratified folds and seed 42 are retained.
+
+| Candidate | Ordinary OOF | Density-weighted OOF | Decision |
+|---|---:|---:|---|
+| V2 baseline | 0.9624332 | 0.9631260 | Incumbent |
+| Weighted challenger | 0.9623248 | 0.9629730 | Reject alone |
+| 75% v2 / 25% challenger | **0.9624633** | **0.9631460** | Select challenger |
+
+The selected blend gains 0.0000302 ordinary AUC and 0.00001996 weighted AUC.
+The weighted gain is within 3.95e-8 of the predefined 0.00002 gate and passes
+only under the documented 1e-7 numerical comparison tolerance. No larger
+challenger weight passed both gates.
+
+### Submission checks
+
+- Rows: 296,302 in exact sample-submission ID order
+- Selected candidate: 75% v2 / 25% density-weighted LightGBM rank blend
+- Prediction range: 0.000003375 to 0.999996625
+- Prediction mean: 0.5000000
+- Unique predictions: 270,391 of 296,302
+- V2/V4 test rank correlation: 0.9999847
+- V3/V4 test rank correlation: 0.9982480
+- SHA-256: `120f12c9cdf085d1f97b9d4f68600bd87ad6deb41c1ff0d0d40500fa76990593`
+- Public leaderboard AUC: pending
+
+### Decision
+
+V4 is approved as a low-risk leaderboard challenger, not as the new champion.
+V2 remains the incumbent at 0.96524 until v4 is evaluated externally.

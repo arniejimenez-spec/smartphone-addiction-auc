@@ -3,6 +3,21 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
+## v4.0.0 - 2026-08-21
+
+- Added reproducible five-fold adversarial validation and cross-fitted
+  train-to-test density weights.
+- Added ordinary and density-weighted OOF AUC as independent release gates.
+- Returned to v2's raw and explicit-missingness features; excluded v3 feature
+  reconstruction after its leaderboard regression.
+- Trained a density-weighted `lgbm_c` challenger on the same folds and model
+  configuration as v2.
+- Selected a conservative 75% v2 / 25% density-weighted percentile-rank blend.
+- Improved ordinary OOF AUC from 0.9624332 to 0.9624633 and test-like weighted
+  OOF AUC from 0.9631260 to 0.9631460.
+- Added v4 unit tests, resumable fold checkpoints, and submission validation.
+- Leaderboard score: pending; v2 remains the incumbent until evaluated.
+
 ## v3.0.0 - 2026-08-21
 
 - Added label-free reconstruction for five predictable missing fields.

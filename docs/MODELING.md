@@ -66,3 +66,21 @@ on the public leaderboard. Ordinary IID folds are therefore necessary but not
 sufficient for this competition. New feature pipelines—especially those that
 interact with missingness—must also be evaluated under a test-like validation
 view derived from missing-pattern distributions or adversarial weights.
+
+## Test-like validation and v4 release gate
+
+V4 fits a separate five-fold domain classifier to distinguish training from
+test covariates without using `addicted_label`. Its adversarial AUC is 0.564062,
+confirming mild but learnable shift. Cross-fitted domain probabilities are
+converted to normalized test/train density ratios; clipping limits the weights
+to 0.347 through 3.399 and preserves an effective sample size of about 664,909.
+
+Candidate predictions are scored twice: ordinary OOF AUC and density-weighted
+OOF AUC. A blend must gain at least 0.00002 on both views, allowing only a
+1e-7 numerical comparison tolerance. This is intentionally stricter than
+selecting the best point on one OOF curve after the v3 leaderboard mismatch.
+
+Density weighting did not make the standalone target model stronger. It did
+change enough pairwise rankings to complement v2: the 25% challenger blend
+gained 0.0000302 ordinary AUC and 0.00001996 density-weighted AUC. V4 is
+therefore a cautious leaderboard challenger, while v2 remains the incumbent.
