@@ -14,7 +14,7 @@ added only after the corresponding submission is evaluated.
 - Selected the five-fold `lgbm_c` ensemble at 0.962433 OOF AUC.
 - Rejected LightGBM family blends and CatBoost based on validation evidence.
 - Added unit tests and a GitHub Actions workflow.
-- Leaderboard score: pending.
+- Leaderboard score: **0.96524**.
 
 ## v1.0.0 - 2026-08-06
 
