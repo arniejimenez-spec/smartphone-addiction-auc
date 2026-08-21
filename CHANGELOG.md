@@ -16,7 +16,10 @@ added only after the corresponding submission is evaluated.
 - Rejected a 90-95% XGBoost blend because its maximum 0.0000145 improvement
   over standalone XGBoost was below the 0.0001 blend threshold.
 - Generated and validated the standalone `submission_v5.csv` candidate.
-- Leaderboard score: pending; v2 remains the incumbent until evaluated.
+- Leaderboard score: **0.96623**.
+- Outcome: improved on the v2 champion by **0.00099** and became the new
+  champion model. The multi-seed, different-model-family validation transferred
+  successfully to the leaderboard.
 
 ## v4.0.0 - 2026-08-21
 

@@ -12,13 +12,12 @@ focuses on ranking quality rather than probability calibration.
 | v2.0.0 | Five-fold LightGBM ensemble | 0.962433 OOF | **0.96524** | `submission_v2.csv` |
 | v3.0.0 | Reconstructed features + v2 rank blend | **0.963457 OOF** | 0.96459 | `submission_v3.csv` |
 | v4.0.0 | V2 + test-density-weighted rank blend | 0.962463 OOF | 0.96357 | `submission_v4.csv` |
-| v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | Pending | `submission_v5.csv` |
+| v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | **0.96623** | `submission_v5.csv` |
 
-V2 remains the current leaderboard champion at **0.96524**. V3 is retained as
-a documented negative result: its improved OOF score did not transfer to the
-leaderboard. V4 is also a documented negative result: adversarially weighted
-validation did not repair the local-to-leaderboard mismatch. V5 is a
-multi-seed-validated, structurally different challenger pending evaluation.
+V5 is the current leaderboard champion at **0.96623**, improving on v2 by
+0.00099. V3 and v4 remain documented negative results whose local improvements
+did not transfer. V5's multi-seed validation and genuinely different model
+family successfully predicted its leaderboard improvement.
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine

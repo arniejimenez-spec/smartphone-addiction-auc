@@ -322,9 +322,14 @@ standalone XGBoost, so it failed the 0.0001 blend-gain threshold.
 - V3/V5 test rank correlation: 0.9945099
 - V4/V5 test rank correlation: 0.9948090
 - SHA-256: `11058c10bd4f160029689cea8a72327a2fa67bd01efebce936573828dded02d3`
-- Public leaderboard AUC: pending
+- Public leaderboard AUC: **0.96623**
+- Leaderboard delta versus v2: **+0.00099**
+- Leaderboard delta versus v3: **+0.00164**
+- Leaderboard delta versus v4: **+0.00266**
 
 ### Decision
 
-V5 is approved as a materially different, multi-seed-validated leaderboard
-challenger. V2 remains the incumbent at 0.96524 until v5 is evaluated.
+V5 replaces v2 as the champion. Its materially different model family,
+three-seed gains, improvement on every full fold, and +0.002279 complete-OOF
+gain transferred to a +0.00099 leaderboard improvement. The decision to use
+standalone XGBoost rather than force an immaterial blend is retained.

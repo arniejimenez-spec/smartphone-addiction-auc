@@ -122,3 +122,14 @@ Standalone XGBoost is selected. The best rank blend scored 0.964727, only
 0.000014 above the standalone model, so it failed the 0.0001 blend-gain rule.
 This prevents another leaderboard submission dominated by a nearly identical
 incumbent ranking.
+
+## V5 leaderboard outcome
+
+V5 scored **0.96623**, improving on v2 by 0.00099 and becoming the new champion.
+Unlike v3 and v4, the candidate changed model family, improved every full OOF
+fold, and cleared three independently seeded holdouts by roughly 0.002 AUC.
+Those safeguards correctly predicted a leaderboard gain.
+
+Future challengers should retain this standard: materially different errors,
+positive results on every split seed and full fold, a meaningful complete-OOF
+gain, and no forced blend when the standalone challenger is already stronger.
