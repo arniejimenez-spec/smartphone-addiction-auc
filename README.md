@@ -13,6 +13,7 @@ focuses on ranking quality rather than probability calibration.
 | v3.0.0 | Reconstructed features + v2 rank blend | **0.963457 OOF** | 0.96459 | `submission_v3.csv` |
 | v4.0.0 | V2 + test-density-weighted rank blend | 0.962463 OOF | 0.96357 | `submission_v4.csv` |
 | v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | **0.96623** | `submission_v5.csv` |
+| v6 experiment | Fold-safe masked augmentation | 0.964333 fold-1 | Rejected locally | None |
 
 V5 is the current leaderboard champion at **0.96623**, improving on v2 by
 0.00099. V3 and v4 remain documented negative results whose local improvements
@@ -35,6 +36,7 @@ numeric features, three categorical features, and substantial missingness.
 |-- validate_v4.py       # Cross-fitted train-vs-test density weights
 |-- train_v4.py          # Dual-gated density-weighted v4 challenger
 |-- train_v5.py          # Multi-seed-gated XGBoost pipeline
+|-- train_v6.py          # Fold-safe masked-augmentation experiment
 |-- analyze_shift.py     # Initial adversarial train-vs-test validation
 |-- docs/
 |   |-- EXPERIMENTS.md   # Experiment ledger and leaderboard results

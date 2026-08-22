@@ -3,6 +3,17 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
+## v6 experiment - 2026-08-22
+
+- Added fold-safe masked-data augmentation using real 2+ missing-field test
+  patterns without using test labels.
+- Kept every augmented copy inside its source row's target-model training fold.
+- Evaluated 276,548 masked copies at training weights 0.25 and 0.50.
+- The stronger setting gained 0.000267 globally and 0.000738 on the 2+ missing
+  slice, missing the pre-registered 0.000300 and 0.001000 thresholds.
+- Stopped before the three-seed gate and full training; no v6 submission was
+  produced and v5 remains the champion.
+
 ## v5.0.0 - 2026-08-21
 
 - Added XGBoost as a genuinely different model family with aligned one-hot

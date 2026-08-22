@@ -133,3 +133,20 @@ Those safeguards correctly predicted a leaderboard gain.
 Future challengers should retain this standard: materially different errors,
 positive results on every split seed and full fold, a meaningful complete-OOF
 gain, and no forced blend when the standalone challenger is already stronger.
+
+## V6 masked-augmentation rejection
+
+V6 targeted the remaining 2+ missing-field weakness by copying only training-
+fold rows and applying mask templates sampled from real test covariates. The
+copies retained their labels, remained within their source training fold, and
+were down-weighted so validation rows stayed completely untouched.
+
+The approach improved the intended slice but not enough to advance. At masked
+copy weights 0.25 and 0.50, global fold-1 gains were +0.000210 and +0.000267;
+2+ missing gains were +0.000581 and +0.000738. The stronger run preserved the
+zero- and one-missing slices, but still missed the pre-registered +0.000300
+global and +0.001000 hard-slice requirements.
+
+The three-seed and full-fold stages were therefore skipped. This preserves the
+v5 standard: a plausible direction is not enough without a material first-fold
+effect. V5 remains the champion and no v6 submission exists.

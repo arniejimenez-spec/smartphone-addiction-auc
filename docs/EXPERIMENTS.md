@@ -333,3 +333,47 @@ V5 replaces v2 as the champion. Its materially different model family,
 three-seed gains, improvement on every full fold, and +0.002279 complete-OOF
 gain transferred to a +0.00099 leaderboard improvement. The decision to use
 standalone XGBoost rather than force an immaterial blend is retained.
+
+## v6 experiment - Fold-safe masked-data augmentation
+
+Date: 2026-08-22
+
+### Motivation and leakage control
+
+V5 OOF AUC is 0.972982 on complete rows, 0.968867 with one missing field, and
+0.950194 with two or more. The 2+ group represents 35.17% of test rows, making
+it the only slice large and weak enough to offer plausible major headroom.
+
+V6 samples mask templates only from test covariates with two or more missing
+fields. Within each target fold, rows with zero or one missing field are copied,
+masked, and kept exclusively in that fold's training partition. Validation rows
+are never augmented or copied into training. The original training rows retain
+weight 1.0 and masked copies receive a lower experimental weight.
+
+### Pre-registered ablation gates
+
+Before any three-seed or full training, seed-42 fold 1 had to meet all of:
+
+- Global gain of at least +0.000300 over v5
+- 2+ missing-field gain of at least +0.001000
+- No loss worse than -0.000200 on zero- or one-missing rows
+
+### Results
+
+Both runs used 276,548 masked copies, a 0.50 copy ratio, and a 3,000-tree
+ceiling.
+
+| Copy weight | Global AUC | Global gain | 0 missing gain | 1 missing gain | 2+ gain | Decision |
+|---:|---:|---:|---:|---:|---:|---|
+| 0.25 | 0.9642757 | +0.0002098 | +0.0001062 | -0.0000133 | +0.0005807 | Reject |
+| 0.50 | **0.9643328** | **+0.0002669** | +0.0000373 | +0.0001312 | **+0.0007383** | Reject |
+
+The stronger weight improved every reported objective except that its gains
+remained below both advancement thresholds. Running additional seeds or five
+full folds would therefore violate the experiment's stop rule.
+
+### Decision
+
+V6 stops after ablation. No three-seed gate, full OOF model, or submission was
+created. Masked augmentation is retained as a validated but insufficient idea;
+v5 remains the champion at 0.96623.
