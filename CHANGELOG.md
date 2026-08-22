@@ -3,6 +3,25 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
+## v7.0.0 - 2026-08-22
+
+- Adapted the selected 44-feature, non-pseudo-label LightGBM design from
+  Naji's Apache-2.0 Kaggle notebook.
+- Added combined train/test exact-value frequency encodings for nine numeric
+  fields and fold-local smoothed target encodings for the same values.
+- Added ratio, intensity, and screen-time consistency/slack features that
+  expose repeated structure in the synthetic data.
+- Reproduced the notebook's fold-1 result at 0.9679357 and cleared the v5 gate
+  by +0.0038698 AUC.
+- Improved complete five-fold OOF AUC from 0.9647124 to **0.9686010**, with
+  gains between +0.0035531 and +0.0040742 on every fold.
+- Rejected the 90% v7 / 10% v5 blend because its +0.0000652 OOF gain was below
+  the pre-declared +0.0001 blend threshold.
+- Generated and validated standalone `submission_v7.csv` in the repository
+  root and artifact directory.
+- Leaderboard score: **0.96983**.
+- Outcome: improved on v5 by **0.00360** and became the new champion.
+
 ## v5.0.0 - 2026-08-21
 
 - Added XGBoost as a genuinely different model family with aligned one-hot

@@ -13,11 +13,11 @@ focuses on ranking quality rather than probability calibration.
 | v3.0.0 | Reconstructed features + v2 rank blend | **0.963457 OOF** | 0.96459 | `submission_v3.csv` |
 | v4.0.0 | V2 + test-density-weighted rank blend | 0.962463 OOF | 0.96357 | `submission_v4.csv` |
 | v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | **0.96623** | `submission_v5.csv` |
+| v7.0.0 | Synthetic-value-encoded LightGBM | **0.968601 OOF** | **0.96983** | `submission_v7.csv` |
 
-V5 is the current leaderboard champion at **0.96623**, improving on v2 by
-0.00099. V3 and v4 remain documented negative results whose local improvements
-did not transfer. V5's multi-seed validation and genuinely different model
-family successfully predicted its leaderboard improvement.
+V7 is the current leaderboard champion at **0.96983**, improving on v5 by
+0.00360. Its exact five-fold OOF AUC improved by 0.003889 over v5 and transferred
+to the largest leaderboard gain in the project so far.
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine
@@ -35,6 +35,7 @@ numeric features, three categorical features, and substantial missingness.
 |-- validate_v4.py       # Cross-fitted train-vs-test density weights
 |-- train_v4.py          # Dual-gated density-weighted v4 challenger
 |-- train_v5.py          # Multi-seed-gated XGBoost pipeline
+|-- train_v7.py          # Synthetic-value encodings and deep LightGBM
 |-- analyze_shift.py     # Initial adversarial train-vs-test validation
 |-- docs/
 |   |-- EXPERIMENTS.md   # Experiment ledger and leaderboard results
@@ -47,6 +48,21 @@ numeric features, three categorical features, and substantial missingness.
 Competition CSVs, trained models, local dependencies, and submissions are
 deliberately excluded from Git. Place `train.csv`, `test.csv`, and
 `sample_submission.csv` in the repository root before running the pipeline.
+
+## Reproduce v7
+
+V7 adapts the non-pseudo-label feature and LightGBM design from Naji's public
+[Kaggle notebook](https://www.kaggle.com/code/najiama/single-lgbm-model-lb-0-96990-cv-0-96862?scriptVersionId=344072919),
+released under Apache-2.0. It uses fold-local target smoothing and a gated,
+resumable two-stage run:
+
+```powershell
+python train_v7.py --mode gate --run-name gate
+python train_v7.py --mode full --run-name full --gate-run-name gate --resume
+```
+
+The selected submission is written to both
+`artifacts/v7/full/submission_v7.csv` and root `submission_v7.csv`.
 
 ## Reproduce v1
 
