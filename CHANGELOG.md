@@ -3,6 +3,24 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
+## v5.0.0 - 2026-08-21
+
+- Added XGBoost as a genuinely different model family with aligned one-hot
+  categorical features and native numeric missing-value handling.
+- Added a three-seed robustness gate requiring at least +0.0005 AUC on every
+  split and +0.0010 mean gain over label-strict v2 OOF predictions.
+- Passed the seed gate with gains of +0.002225, +0.001994, and +0.002264.
+- Increased the final ceiling from 2,000 to 3,000 trees after a pre-declared
+  fold-1 ablation gained 0.000267 AUC.
+- Improved complete five-fold OOF AUC from 0.9624332 to **0.9647124**.
+- Rejected a 90-95% XGBoost blend because its maximum 0.0000145 improvement
+  over standalone XGBoost was below the 0.0001 blend threshold.
+- Generated and validated the standalone `submission_v5.csv` candidate.
+- Leaderboard score: **0.96623**.
+- Outcome: improved on the v2 champion by **0.00099** and became the new
+  champion model. The multi-seed, different-model-family validation transferred
+  successfully to the leaderboard.
+
 ## v4.0.0 - 2026-08-21
 
 - Added reproducible five-fold adversarial validation and cross-fitted

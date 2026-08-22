@@ -260,3 +260,76 @@ retained as a diagnostic but rejected as a model-selection gate for this
 competition. The 0.9999847 V2/V4 test rank correlation also confirms that
 closely related LightGBM blends are not producing useful new leaderboard
 signal. V2 remains the champion at 0.96524.
+
+## v5.0.0 - Robust standalone XGBoost challenger
+
+Date: 2026-08-21
+
+### Model-family diagnostic
+
+A monotonic LightGBM challenger was rejected after scoring 0.952011 versus
+0.961573 for v2 on the identical first fold. Hard marginal constraints removed
+important conditional interactions. Histogram XGBoost with one-hot categorical
+handling scored 0.963502 at 1,600 trees on that fold, a +0.001929 gain, and was
+promoted to the robustness gate.
+
+### Three-seed gate
+
+Each candidate uses the first fold from a five-fold stratified splitter, giving
+an 80/20 train/validation split. The v2 comparison is label-strict OOF scoring
+on the same held-out rows.
+
+| Split seed | XGBoost AUC | V2 OOF AUC | Gain |
+|---:|---:|---:|---:|
+| 42 | 0.9637986 | 0.9615732 | +0.0022254 |
+| 17 | 0.9642194 | 0.9622253 | +0.0019941 |
+| 83 | 0.9648232 | 0.9625589 | +0.0022644 |
+| Mean | — | — | **+0.0021613** |
+
+All three gains exceeded the 0.0005 per-seed threshold and the mean exceeded
+the 0.0010 threshold, so the candidate advanced to full OOF training.
+
+### Tree-ceiling ablation
+
+The first five-fold run used 2,000 trees and scored 0.9645037 OOF, but every
+fold's best iteration was at the ceiling. A fold-1 extension was required to
+gain at least 0.0001; 3,000 trees improved fold 1 from 0.9637986 to 0.9640659,
+a +0.0002673 gain. The longer ceiling was therefore applied to all folds.
+
+### Final five-fold validation
+
+| Fold | V2 AUC | XGBoost AUC | Gain | Best iteration |
+|---:|---:|---:|---:|---:|
+| 1 | 0.9615732 | 0.9640659 | +0.0024927 | 2,808 |
+| 2 | 0.9622956 | 0.9646269 | +0.0023312 | 2,875 |
+| 3 | 0.9626279 | 0.9647387 | +0.0021109 | 2,893 |
+| 4 | 0.9634170 | 0.9656778 | +0.0022609 | 2,987 |
+| 5 | 0.9622574 | 0.9644602 | +0.0022028 | 2,906 |
+| OOF | 0.9624332 | **0.9647124** | **+0.0022792** | — |
+
+The candidate improved every fold. V2/XGBoost OOF rank correlation is 0.99335.
+The best blend used 90% XGBoost and scored 0.9647268, only +0.0000145 over
+standalone XGBoost, so it failed the 0.0001 blend-gain threshold.
+
+### Submission checks
+
+- Rows: 296,302 in exact sample-submission ID order
+- Selected candidate: standalone five-fold XGBoost rank average
+- Prediction range: 0.000003375 to 0.999996625
+- Prediction mean: 0.5000000
+- Unique predictions: 244,379 of 296,302
+- V2/V5 test rank correlation: 0.9948432
+- V3/V5 test rank correlation: 0.9945099
+- V4/V5 test rank correlation: 0.9948090
+- SHA-256: `11058c10bd4f160029689cea8a72327a2fa67bd01efebce936573828dded02d3`
+- Public leaderboard AUC: **0.96623**
+- Leaderboard delta versus v2: **+0.00099**
+- Leaderboard delta versus v3: **+0.00164**
+- Leaderboard delta versus v4: **+0.00266**
+
+### Decision
+
+V5 replaces v2 as the champion. Its materially different model family,
+three-seed gains, improvement on every full fold, and +0.002279 complete-OOF
+gain transferred to a +0.00099 leaderboard improvement. The decision to use
+standalone XGBoost rather than force an immaterial blend is retained.
