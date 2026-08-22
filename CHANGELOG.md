@@ -3,7 +3,7 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
-## v7.0.0 candidate - 2026-08-22
+## v7.0.0 - 2026-08-22
 
 - Adapted the selected 44-feature, non-pseudo-label LightGBM design from
   Naji's Apache-2.0 Kaggle notebook.
@@ -18,7 +18,9 @@ added only after the corresponding submission is evaluated.
 - Rejected the 90% v7 / 10% v5 blend because its +0.0000652 OOF gain was below
   the pre-declared +0.0001 blend threshold.
 - Generated and validated standalone `submission_v7.csv` in the repository
-  root and artifact directory; leaderboard score is pending.
+  root and artifact directory.
+- Leaderboard score: **0.96983**.
+- Outcome: improved on v5 by **0.00360** and became the new champion.
 
 ## v5.0.0 - 2026-08-21
 

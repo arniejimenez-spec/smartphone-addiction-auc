@@ -334,7 +334,7 @@ three-seed gains, improvement on every full fold, and +0.002279 complete-OOF
 gain transferred to a +0.00099 leaderboard improvement. The decision to use
 standalone XGBoost rather than force an immaterial blend is retained.
 
-## v7.0.0 candidate - Synthetic-value-encoded LightGBM
+## v7.0.0 - Synthetic-value-encoded LightGBM
 
 Date: 2026-08-22
 
@@ -405,11 +405,13 @@ below the pre-declared 0.0001 blend threshold, standalone v7 is selected.
 - Prediction mean: 0.7101952
 - Unique predictions: 296,302 of 296,302
 - SHA-256: `3ff72b4e2a830fa6bde86b143adab772ae4cb527cb343c82c6f434a5e3a3323e`
-- Public leaderboard AUC: pending
+- Public leaderboard AUC: **0.96983**
+- Leaderboard delta versus v5: **+0.00360**
+- Distance from 0.97000: **0.00017**
 
 ### Decision
 
-V7 is the strongest local candidate and clears the full advancement gate by a
-wide margin. `submission_v7.csv` is produced in both the repository root and
-the v7 artifact directory. V5 remains the confirmed leaderboard champion until
-the v7 file is scored.
+V7 clears the full advancement gate by a wide margin and scores 0.96983 on the
+public leaderboard. It replaces v5 as champion after transferring a +0.003889
+OOF gain into a +0.00360 leaderboard gain. The standalone selection is retained
+because the locally stronger blend did not clear the reliability threshold.

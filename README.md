@@ -13,11 +13,11 @@ focuses on ranking quality rather than probability calibration.
 | v3.0.0 | Reconstructed features + v2 rank blend | **0.963457 OOF** | 0.96459 | `submission_v3.csv` |
 | v4.0.0 | V2 + test-density-weighted rank blend | 0.962463 OOF | 0.96357 | `submission_v4.csv` |
 | v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | **0.96623** | `submission_v5.csv` |
-| v7.0.0 candidate | Synthetic-value-encoded LightGBM | **0.968601 OOF** | Pending | `submission_v7.csv` |
+| v7.0.0 | Synthetic-value-encoded LightGBM | **0.968601 OOF** | **0.96983** | `submission_v7.csv` |
 
-V5 remains the confirmed leaderboard champion at **0.96623**. V7 is the
-strongest local candidate, improving exact five-fold OOF AUC by 0.003889 over
-v5; its leaderboard score is intentionally left pending until evaluated.
+V7 is the current leaderboard champion at **0.96983**, improving on v5 by
+0.00360. Its exact five-fold OOF AUC improved by 0.003889 over v5 and transferred
+to the largest leaderboard gain in the project so far.
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine

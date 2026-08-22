@@ -161,3 +161,11 @@ Pseudo-labeling is excluded from v7. The source notebook reports that it lowers
 CV by 0.00002 while adding only 0.00002 on the public leaderboard, and it relies
 on a separate blend prediction file. That higher-risk transductive step should
 be evaluated independently rather than bundled with the core improvement.
+
+## V7 leaderboard outcome
+
+V7 scored **0.96983**, improving on v5 by 0.00360 and becoming the new champion.
+Its +0.003889 complete-OOF gain transferred closely to the leaderboard, while
+the notebook's comparable non-pseudo model reported 0.96988. This validates
+exact-value frequency and fold-local target encodings as the project's strongest
+signal additions. V7 is 0.00017 below the 0.97000 target.
