@@ -133,3 +133,31 @@ Those safeguards correctly predicted a leaderboard gain.
 Future challengers should retain this standard: materially different errors,
 positive results on every split seed and full fold, a meaningful complete-OOF
 gain, and no forced blend when the standalone challenger is already stronger.
+
+## V7 synthetic-value encoding policy
+
+V7 adapts the non-pseudo-label design from Naji's public Apache-2.0 Kaggle
+notebook. Its decisive addition is treating repeated numeric values as evidence
+about the hidden source distribution. Each of the nine raw numeric fields gets
+a label-free frequency count from combined train/test covariates and a smoothed
+target encoding fitted separately inside each target-model training fold.
+Validation labels are never used to build their mappings. Unlike the notebook,
+the smoothing prior is the training fold's target mean rather than the global
+target mean.
+
+The final 44 features also include ratios, behavior intensities, and conditional
+screen-time slack features. LightGBM uses a 0.01 learning rate, 127 leaves,
+1,023 bins, feature fraction 0.34, bagging fraction 0.75, and a 10,000-tree
+ceiling with 500-round early stopping. This is substantially deeper and slower
+than v2's 1,200-tree LightGBM.
+
+Fold 1 had to beat exact v5 OOF predictions by at least 0.001. It gained
+0.003870 and advanced. Complete five-fold OOF improved by 0.003889 and every
+fold improved by at least 0.003553. The best v5/v7 rank blend added only
+0.000065 over standalone v7, below the 0.0001 blend threshold, so v7 remains
+standalone.
+
+Pseudo-labeling is excluded from v7. The source notebook reports that it lowers
+CV by 0.00002 while adding only 0.00002 on the public leaderboard, and it relies
+on a separate blend prediction file. That higher-risk transductive step should
+be evaluated independently rather than bundled with the core improvement.

@@ -333,3 +333,83 @@ V5 replaces v2 as the champion. Its materially different model family,
 three-seed gains, improvement on every full fold, and +0.002279 complete-OOF
 gain transferred to a +0.00099 leaderboard improvement. The decision to use
 standalone XGBoost rather than force an immaterial blend is retained.
+
+## v7.0.0 candidate - Synthetic-value-encoded LightGBM
+
+Date: 2026-08-22
+
+### Source and scope
+
+V7 adapts the selected non-pseudo-label pipeline from Naji's public
+[Single LGBM Model LB 0.96990 CV 0.96862](https://www.kaggle.com/code/najiama/single-lgbm-model-lb-0-96990-cv-0-96862?scriptVersionId=344072919)
+notebook, released under Apache-2.0. The source reports 0.96863 CV and 0.96988
+public-LB AUC before pseudo-labeling. Its pseudo-label update lowers CV to
+0.96861 and adds only 0.00002 public-LB AUC, so pseudo-labeling is excluded from
+this candidate.
+
+### Features and leakage control
+
+The final 44 features contain:
+
+- Nine raw numeric fields and two selected categorical fields
+- Fifteen ratio, intensity, aggregate, and conditional screen-slack features
+- Nine exact-value frequency encodings computed label-free on train plus test
+- Nine exact-value target encodings fitted only on each model's training fold
+
+The target-encoding smoothing prior uses the training fold's label mean, not
+the global label mean used in the source notebook. Validation and test values
+are mapped from the training fold only. Combined train/test frequency counts
+are transductive but do not use `addicted_label`.
+
+### Model
+
+- Five-fold shuffled stratified CV, seed 42
+- LightGBM GBDT with 127 leaves and 1,023 bins
+- Learning rate 0.01 and 10,000-tree ceiling
+- Feature fraction 0.34; bagging fraction 0.75 every five rounds
+- Minimum child samples 200; L1 0.1; L2 1.0
+- Deterministic column-wise training and 500-round early stopping
+
+### Fold-1 gate
+
+The candidate had to improve exact v5 fold-1 OOF AUC by at least 0.001.
+
+| Model | Fold-1 AUC | Gain vs v5 | Best iteration | Decision |
+|---|---:|---:|---:|---|
+| V5 XGBoost | 0.9640659 | - | 2,808 | Baseline |
+| V7 LightGBM | **0.9679357** | **+0.0038698** | 4,505 | Advance |
+
+The v7 checkpoint matches the notebook's reported 0.96794 fold-1 result within
+rounding.
+
+### Complete five-fold validation
+
+| Fold | V5 AUC | V7 AUC | Gain | Best iteration |
+|---:|---:|---:|---:|---:|
+| 1 | 0.9640659 | 0.9679357 | +0.0038698 | 4,505 |
+| 2 | 0.9646269 | 0.9687011 | +0.0040742 | 3,902 |
+| 3 | 0.9647387 | 0.9687474 | +0.0040087 | 4,118 |
+| 4 | 0.9656778 | 0.9692309 | +0.0035531 | 4,758 |
+| 5 | 0.9644602 | 0.9684003 | +0.0039401 | 4,547 |
+| OOF | 0.9647124 | **0.9686010** | **+0.0038887** | - |
+
+V5/V7 OOF rank correlation is 0.98672. A 90% v7 / 10% v5 rank blend scored
+0.9686663, a +0.0000652 improvement over standalone v7. Because that gain is
+below the pre-declared 0.0001 blend threshold, standalone v7 is selected.
+
+### Submission checks
+
+- Rows: 296,302 in exact sample-submission ID order
+- Selected candidate: standalone five-fold v7 probability average
+- Prediction range: 0.000220141 to 0.999999684
+- Prediction mean: 0.7101952
+- Unique predictions: 296,302 of 296,302
+- SHA-256: `3ff72b4e2a830fa6bde86b143adab772ae4cb527cb343c82c6f434a5e3a3323e`
+- Public leaderboard AUC: pending
+
+### Decision
+
+V7 is the strongest local candidate and clears the full advancement gate by a
+wide margin. `submission_v7.csv` is produced in both the repository root and
+the v7 artifact directory. V5 remains the confirmed leaderboard champion until
+the v7 file is scored.
