@@ -6,6 +6,7 @@
 # Generated predictions and model artifacts
 /submission*.csv
 /artifacts/
+/external/
 *.cbm
 *.pkl
 *.joblib
@@ -13,8 +14,10 @@
 
 # Local Python environments and caches
 /python_packages/
+/local_deps/
 /.venv/
 /venv/
+/.uv_cache/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -26,4 +29,3 @@ __pycache__/
 Thumbs.db
 .idea/
 .vscode/
-

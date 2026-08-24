@@ -415,3 +415,81 @@ V7 clears the full advancement gate by a wide margin and scores 0.96983 on the
 public leaderboard. It replaces v5 as champion after transferring a +0.003889
 OOF gain into a +0.00360 leaderboard gain. The standalone selection is retained
 because the locally stronger blend did not clear the reliability threshold.
+
+## v8.0.0 - Cross-fitted public OOF meta-stack
+
+Date: 2026-08-24
+
+### Source and member audit
+
+V8 reproduces the base meta-stack from Byer's Apache-2.0
+[S6E8 Rank-Logit-Regime Fusion](https://www.kaggle.com/code/hboyang/s6e8-rank-logit-regime-fusion-lb0-97125)
+notebook. The local audit loaded exactly 205 unique members from nine public
+OOF libraries. All 691,369 OOF rows and 296,302 test rows were finite and in
+the original competition order. ID-bearing CSV and Parquet sources were also
+checked against `train.csv` and `test.csv` IDs.
+
+Every member is converted to an average-tie percentile rank. The cached pool
+has shapes `(691369, 205)` and `(296302, 205)` in float32. Competition data,
+external libraries, and generated matrices remain excluded from Git.
+
+### Meta-model
+
+- Five-fold shuffled stratified CV, seed 42
+- Standardization fitted separately inside each fold
+- Logistic regression with `C=0.1`, `lbfgs`, tolerance `1e-5`
+- Maximum 1,200 optimizer iterations
+- Test probabilities averaged equally across the five fold models
+
+The reference notebook reports 0.97022124036 for this base stack. The local
+implementation scores 0.97021865083, a difference of only -0.00000258953.
+
+### Complete five-fold validation
+
+| Fold | V7 AUC | V8 AUC | Gain |
+|---:|---:|---:|---:|
+| 1 | 0.967935745 | 0.969592606 | +0.001656861 |
+| 2 | 0.968701062 | 0.970332932 | +0.001631871 |
+| 3 | 0.968747420 | 0.970298686 | +0.001551266 |
+| 4 | 0.969230883 | 0.970901152 | +0.001670269 |
+| 5 | 0.968400303 | 0.970003820 | +0.001603516 |
+| OOF | 0.968601035 | **0.970218651** | **+0.001617615** |
+
+The advancement gate requires at least +0.0005 pooled OOF AUC and a positive
+gain on every fold. V8 passes both requirements comfortably.
+
+### V7-member ablation
+
+Adding percentile-ranked v7 as member 206 scores 0.97021752355, decreasing AUC
+by 0.00000112729. The predeclared member-retention threshold is +0.00002, so
+the exact 205-member public stack is selected.
+
+### Submission checks
+
+- Rows: 296,302 in exact v7/test ID order
+- Selected candidate: standalone 205-member cross-fitted logistic stack
+- Prediction range: 0.007310552 to 0.999993458
+- Prediction mean: 0.709246347
+- Unique predictions: 244,738 of 296,302
+- V7/V8 test rank correlation: 0.994467920
+- SHA-256: `17a5e30d2fbb1de656344c53df548a4ea4e15c6817a2395647ee6d79f957907c`
+- Public leaderboard AUC: **0.97124**
+- Leaderboard delta versus v7: **+0.00141**
+
+### Scope of the 0.97125 reference result
+
+The source notebook's published 0.97125 submission adds a 64-bit GPU
+rank-logit model and a roughly 1,600-feature missingness/disagreement regime
+model, then rank-blends that fusion with the cross-fitted base using alpha 0.7.
+Its published run used Kaggle T4 GPUs and did not recompute fusion OOF
+validation. V8 records only the base stack that was independently reproduced
+and honestly validated locally; the public GPU output is not mislabeled as a
+locally trained artifact.
+
+### Decision
+
+V8 scores **0.97124**, improving on v7 by **0.00141** and becoming the new
+champion. Its large, consistent OOF gain and near-exact reproduction of the
+source base metric transferred closely to the leaderboard. The decision to
+exclude v7 from the final stack is retained because the 206th member decreased
+honest OOF AUC.
