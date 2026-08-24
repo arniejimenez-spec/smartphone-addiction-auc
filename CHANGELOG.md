@@ -3,6 +3,25 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
+## v8.0.0 candidate - 2026-08-24
+
+- Added an exact loader for 205 aligned public OOF/test prediction members from
+  nine downloaded libraries, with strict row, ID, shape, finiteness, member
+  count, and member-order checks.
+- Reproduced the reference public base meta-stack at **0.97021865 OOF AUC**, only
+  0.00000259 below its published 0.97022124 result.
+- Improved on v7 by **0.00161762 OOF AUC**, with gains from +0.00155127 to
+  +0.00167027 across all five frozen folds.
+- Evaluated v7 as a 206th meta member and rejected it because OOF AUC decreased
+  slightly to 0.97021752.
+- Added cached float32 member matrices, fold coefficients, complete OOF
+  predictions, metrics, an advancement gate, and five data-free v8 tests.
+- Generated and validated `submission_v8.csv` in the repository root and
+  artifact directory.
+- Leaderboard score: pending.
+- Outcome: advances as the next submission candidate; v7 remains the confirmed
+  leaderboard champion until v8 is evaluated.
+
 ## v7.0.0 - 2026-08-22
 
 - Adapted the selected 44-feature, non-pseudo-label LightGBM design from

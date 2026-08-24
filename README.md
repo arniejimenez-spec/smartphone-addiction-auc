@@ -14,10 +14,12 @@ focuses on ranking quality rather than probability calibration.
 | v4.0.0 | V2 + test-density-weighted rank blend | 0.962463 OOF | 0.96357 | `submission_v4.csv` |
 | v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | **0.96623** | `submission_v5.csv` |
 | v7.0.0 | Synthetic-value-encoded LightGBM | **0.968601 OOF** | **0.96983** | `submission_v7.csv` |
+| v8.0.0 candidate | 205-member cross-fitted OOF meta-stack | **0.970219 OOF** | Pending | `submission_v8.csv` |
 
-V7 is the current leaderboard champion at **0.96983**, improving on v5 by
-0.00360. Its exact five-fold OOF AUC improved by 0.003889 over v5 and transferred
-to the largest leaderboard gain in the project so far.
+V7 remains the confirmed leaderboard champion at **0.96983**. V8 is the next
+validated candidate: it improves on v7 by 0.001618 OOF AUC and wins all five
+fold comparisons. Its leaderboard result is intentionally left pending until
+the generated file is submitted.
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine
@@ -36,6 +38,7 @@ numeric features, three categorical features, and substantial missingness.
 |-- train_v4.py          # Dual-gated density-weighted v4 challenger
 |-- train_v5.py          # Multi-seed-gated XGBoost pipeline
 |-- train_v7.py          # Synthetic-value encodings and deep LightGBM
+|-- train_v8.py          # Aligned public OOF library and logistic meta-stack
 |-- analyze_shift.py     # Initial adversarial train-vs-test validation
 |-- docs/
 |   |-- EXPERIMENTS.md   # Experiment ledger and leaderboard results
@@ -63,6 +66,30 @@ python train_v7.py --mode full --run-name full --gate-run-name gate --resume
 
 The selected submission is written to both
 `artifacts/v7/full/submission_v7.csv` and root `submission_v7.csv`.
+
+## Reproduce v8
+
+V8 reconstructs the base stack from Byer's Apache-2.0
+[Rank-Logit-Regime Fusion notebook](https://www.kaggle.com/code/hboyang/s6e8-rank-logit-regime-fusion-lb0-97125).
+The required aligned public OOF libraries live under `external/v8` and are
+excluded from Git. Audit every member before fitting:
+
+```powershell
+python train_v8.py --mode audit
+python train_v8.py --mode train
+```
+
+The script rank-normalizes exactly 205 OOF/test members, fits a frozen
+five-fold standardized logistic stack, and compares adding local v7 as a 206th
+member. V7 is retained only for an OOF gain of at least 0.00002; it was rejected
+because AUC decreased from 0.97021865 to 0.97021752. The selected base stack
+cleared the release gate against v7 on every fold and writes
+`artifacts/v8/full/submission_v8.csv` plus root `submission_v8.csv`.
+
+The source notebook's final 0.97125 leaderboard file adds a much larger
+rank-logit and missingness-regime fusion fit designed for a Kaggle T4 GPU. That
+GPU-only layer is not represented as locally reproduced evidence here; v8's
+tracked validation result is the independently reproduced base stack.
 
 ## Reproduce v1
 

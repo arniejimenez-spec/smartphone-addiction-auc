@@ -169,3 +169,29 @@ Its +0.003889 complete-OOF gain transferred closely to the leaderboard, while
 the notebook's comparable non-pseudo model reported 0.96988. This validates
 exact-value frequency and fold-local target encodings as the project's strongest
 signal additions. V7 is 0.00017 below the 0.97000 target.
+
+## V8 OOF-library stacking policy
+
+V8 changes the unit of modeling from raw features to fold-safe OOF prediction
+members. External predictions are eligible only when they include both OOF and
+test values in the original competition row order. Sources with IDs are
+verified exactly; positional NumPy sources must match the fixed row counts and
+pass finiteness checks. The exact member registry is frozen at 205 entries so a
+silent extra or missing file cannot change the experiment.
+
+All inputs are percentile-ranked before fitting. A standardized logistic model
+is trained inside each of the same five seed-42 folds, making every reported v8
+training prediction out of fold. The locally reproduced OOF AUC of 0.97021865
+matches the public reference's 0.97022124 within 0.0000026 and improves on v7
+by 0.00161762. All five fold gains exceed 0.00155.
+
+V7 was evaluated as an additional stack member rather than assumed useful. It
+reduced OOF AUC by 0.00000113, so the selection rule excluded it. This preserves
+the project's no-forced-blend policy even though v7 is the incumbent.
+
+The reference notebook's final 0.97125 score is not evidence for the locally
+validated base model. That file uses a GPU-only rank-logit and missingness
+regime fusion and was published with its expensive fusion validation disabled.
+Until that layer is independently validated, `submission_v8.csv` refers to the
+reproducible 205-member base stack, while the 0.97125 result is documented only
+as an external reference.
