@@ -3,7 +3,7 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
-## v8.0.0 candidate - 2026-08-24
+## v8.0.0 - 2026-08-24
 
 - Added an exact loader for 205 aligned public OOF/test prediction members from
   nine downloaded libraries, with strict row, ID, shape, finiteness, member
@@ -18,9 +18,9 @@ added only after the corresponding submission is evaluated.
   predictions, metrics, an advancement gate, and five data-free v8 tests.
 - Generated and validated `submission_v8.csv` in the repository root and
   artifact directory.
-- Leaderboard score: pending.
-- Outcome: advances as the next submission candidate; v7 remains the confirmed
-  leaderboard champion until v8 is evaluated.
+- Leaderboard score: **0.97124**.
+- Outcome: improved on v7 by **0.00141** and became the new champion. The
+  +0.00161762 OOF gain transferred closely to the leaderboard.
 
 ## v7.0.0 - 2026-08-22
 

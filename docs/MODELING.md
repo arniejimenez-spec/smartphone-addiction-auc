@@ -195,3 +195,11 @@ regime fusion and was published with its expensive fusion validation disabled.
 Until that layer is independently validated, `submission_v8.csv` refers to the
 reproducible 205-member base stack, while the 0.97125 result is documented only
 as an external reference.
+
+## V8 leaderboard outcome
+
+V8 scored **0.97124**, improving on v7 by **0.00141** and becoming the new
+champion. The +0.00161762 complete-OOF gain transferred closely, and every fold
+had already improved by at least 0.00155. This validates fold-safe public OOF
+stacking as the strongest ensemble step in the project so far and confirms that
+adding the highly correlated local v7 member was unnecessary.

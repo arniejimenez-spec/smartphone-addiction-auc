@@ -416,7 +416,7 @@ public leaderboard. It replaces v5 as champion after transferring a +0.003889
 OOF gain into a +0.00360 leaderboard gain. The standalone selection is retained
 because the locally stronger blend did not clear the reliability threshold.
 
-## v8.0.0 candidate - Cross-fitted public OOF meta-stack
+## v8.0.0 - Cross-fitted public OOF meta-stack
 
 Date: 2026-08-24
 
@@ -473,7 +473,8 @@ the exact 205-member public stack is selected.
 - Unique predictions: 244,738 of 296,302
 - V7/V8 test rank correlation: 0.994467920
 - SHA-256: `17a5e30d2fbb1de656344c53df548a4ea4e15c6817a2395647ee6d79f957907c`
-- Public leaderboard AUC: pending
+- Public leaderboard AUC: **0.97124**
+- Leaderboard delta versus v7: **+0.00141**
 
 ### Scope of the 0.97125 reference result
 
@@ -487,7 +488,8 @@ locally trained artifact.
 
 ### Decision
 
-V8 advances as the next leaderboard candidate. Its large, consistent OOF gain
-and near-exact reproduction of the source base metric are stronger evidence
-than a forced blend with v7. V7 remains the confirmed champion until the new
-submission is scored.
+V8 scores **0.97124**, improving on v7 by **0.00141** and becoming the new
+champion. Its large, consistent OOF gain and near-exact reproduction of the
+source base metric transferred closely to the leaderboard. The decision to
+exclude v7 from the final stack is retained because the 206th member decreased
+honest OOF AUC.

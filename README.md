@@ -14,12 +14,11 @@ focuses on ranking quality rather than probability calibration.
 | v4.0.0 | V2 + test-density-weighted rank blend | 0.962463 OOF | 0.96357 | `submission_v4.csv` |
 | v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | **0.96623** | `submission_v5.csv` |
 | v7.0.0 | Synthetic-value-encoded LightGBM | **0.968601 OOF** | **0.96983** | `submission_v7.csv` |
-| v8.0.0 candidate | 205-member cross-fitted OOF meta-stack | **0.970219 OOF** | Pending | `submission_v8.csv` |
+| v8.0.0 | 205-member cross-fitted OOF meta-stack | **0.970219 OOF** | **0.97124** | `submission_v8.csv` |
 
-V7 remains the confirmed leaderboard champion at **0.96983**. V8 is the next
-validated candidate: it improves on v7 by 0.001618 OOF AUC and wins all five
-fold comparisons. Its leaderboard result is intentionally left pending until
-the generated file is submitted.
+V8 is the confirmed leaderboard champion at **0.97124**, improving on v7 by
+0.00141. Its +0.001618 OOF gain was positive on all five folds and transferred
+closely to the public leaderboard.
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine
