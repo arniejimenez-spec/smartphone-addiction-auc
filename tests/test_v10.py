@@ -54,6 +54,7 @@ class V10PipelineTests(unittest.TestCase):
 
     def test_iteration_arguments_are_validated(self) -> None:
         self.assertFalse(parse_args([]).source_closure)
+        self.assertEqual(parse_args([]).max_total_iter, 20000)
         with self.assertRaises(SystemExit):
             parse_args(["--max-total-iter", "100", "--block-iter", "200"])
 
@@ -65,6 +66,7 @@ class V10PipelineTests(unittest.TestCase):
         source = "".join(notebook["cells"][1]["source"])
         self.assertIn("def fit_gpu_logistic", source)
         self.assertIn("'/kaggle/working'", source)
+        self.assertIn("'--max-total-iter', '20000'", source)
         script = (ROOT / "train_v10_gpu.py").read_text(encoding="utf-8")
         script_prefix = script.split('\nif __name__ == "__main__":\n', 1)[0]
         notebook_prefix = source.split("\n\n# Kaggle entrypoint:", 1)[0]

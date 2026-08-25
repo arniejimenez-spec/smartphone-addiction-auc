@@ -553,7 +553,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--data-root", type=Path)
     parser.add_argument("--pool-root", type=Path)
     parser.add_argument("--output-dir", type=Path, default=project / "artifacts" / "v10")
-    parser.add_argument("--max-total-iter", type=int, default=4000)
+    parser.add_argument("--max-total-iter", type=int, default=20000)
     parser.add_argument("--block-iter", type=int, default=250)
     parser.add_argument("--chunk-rows", type=int, default=131072)
     parser.add_argument("--resume", action=argparse.BooleanOptionalAction, default=True)

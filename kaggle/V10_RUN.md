@@ -33,5 +33,8 @@ reference-style 70% fusion / 30% base blend. The notebook also writes
 `submission_v10_mix.csv`, the unblended rank-logit/regime alternative.
 
 The selected submission is not created unless both the dual and regime models
-meet a numerical convergence criterion. If the run reaches 4,000 iterations,
-save the checkpoint outputs and rerun with a larger `--max-total-iter` value.
+meet a numerical convergence criterion. The first real GPU run showed that the
+dual fit was still improving at 4,000 iterations, with a maximum absolute
+gradient of `3.249e-7`. The notebook therefore permits up to 20,000 iterations
+per fit while retaining the original `1e-8` convergence gate and stopping as
+soon as that gate is met.

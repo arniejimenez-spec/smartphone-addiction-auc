@@ -17,6 +17,9 @@ added only after the corresponding submission is evaluated.
   the dual and regime fits meet a numerical convergence criterion.
 - Added a self-contained Kaggle GPU notebook, an input/run guide, six data-free
   tests, and a real audit of the 205-member local cache.
+- Raised the adaptive per-fit ceiling from 4,000 to 20,000 iterations after the
+  first T4 run reached `3.249e-7` maximum absolute gradient at iteration 4,000;
+  the strict `1e-8` submission gate remains unchanged.
 - GPU training and leaderboard evaluation are pending.
 
 ## v9.0.0 - 2026-08-24

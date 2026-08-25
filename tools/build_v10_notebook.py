@@ -20,7 +20,7 @@ def main() -> None:
         "\n\n# Kaggle entrypoint: auto-discovers the competition and attached pool cache.\n"
         "run(parse_args([\n"
         "    '--output-dir', '/kaggle/working',\n"
-        "    '--max-total-iter', '4000',\n"
+        "    '--max-total-iter', '20000',\n"
         "    '--block-iter', '250',\n"
         "    '--chunk-rows', '131072',\n"
         "]))\n"
