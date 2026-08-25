@@ -493,3 +493,75 @@ champion. Its large, consistent OOF gain and near-exact reproduction of the
 source base metric transferred closely to the leaderboard. The decision to
 exclude v7 from the final stack is retained because the 206th member decreased
 honest OOF AUC.
+
+## v9.0.0 - Honest rank-logit/regime fusion and ablations
+
+Date: 2026-08-24
+
+### Protocol
+
+V9 uses the frozen 205-member ranked public OOF/test cache and the cross-fitted
+v8 base prediction as member 206. Every result uses five shuffled stratified
+outer folds with seed 42. Candidate-to-v8 blend weights are chosen only from
+the other four outer folds, then applied to the untouched fold. Promotion
+requires at least +0.0001 pooled OOF AUC over v8 and a positive gain on every
+outer fold.
+
+Three candidates were evaluated:
+
+- **Fusion:** all 206 rank and clipped-logit features, plus a separate regime
+  model using source-family rank/logit summaries interacted with completeness,
+  heavy missingness, and member disagreement. The two predictions are rank
+  mixed 55/45.
+- **Stability:** 96 public members selected separately for each outer fold from
+  three inner models trained only on that outer fold's fit rows.
+- **Hierarchical:** source-family mean, spread, range, minimum, and maximum
+  summaries with full regime interactions.
+
+### Complete five-fold validation
+
+| Fold | V8 AUC | Fusion AUC | Gain |
+|---:|---:|---:|---:|
+| 1 | 0.969592606 | 0.969841836 | +0.000249230 |
+| 2 | 0.970332932 | 0.970579215 | +0.000246283 |
+| 3 | 0.970298686 | 0.970507808 | +0.000209122 |
+| 4 | 0.970901152 | 0.971032138 | +0.000130986 |
+| 5 | 0.970003820 | 0.970150035 | +0.000146216 |
+| OOF | 0.970218651 | **0.970422207** | **+0.000203556** |
+
+Fusion passes both advancement requirements. Both of its logistic components
+reached the fixed 1,000-iteration `lbfgs` cap on every fold. The scores and
+predictions are valid deterministic bounded-solver results, but v9 does not
+misstate them as fully converged optima.
+
+### Ablations and nested blends
+
+| Candidate | OOF AUC | Delta vs v8 | Decision |
+|---|---:|---:|---|
+| Hierarchical | 0.970201035 | -0.000017616 | Reject |
+| V8 + hierarchical | 0.970226790 | +0.000008139 | Reject |
+| Stability-pruned | 0.970238714 | +0.000020063 | Reject |
+| V8 + stability | 0.970250634 | +0.000031983 | Reject |
+| V8 + fusion | 0.970366102 | +0.000147451 | Reject; below raw fusion |
+| Raw fusion | **0.970422207** | **+0.000203556** | Select |
+
+The pruning result is positive on every fold but too small to justify replacing
+or blending the full fusion. Source-family hierarchy is useful inside the
+regime branch but loses signal as a standalone replacement for individual
+members.
+
+### Submission checks
+
+- Rows: 296,302 in exact `test.csv` ID order
+- Columns: `id`, `addicted_label`
+- Prediction range: 0.000018225 to 0.999983802
+- Prediction mean: 0.500001687
+- Unique predictions: 289,565 of 296,302
+- V8/V9 test rank correlation: 0.998052360
+- SHA-256: `60c7769953ad5af1c05fdcedefb638b5531289886789e840932319d16f181cb9`
+
+### Decision
+
+Raw fusion is selected and `submission_v9.csv` is promoted to the repository
+root. It is an honestly validated challenger; v8 remains the confirmed public
+leaderboard champion until v9 receives a competition score.

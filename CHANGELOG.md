@@ -3,6 +3,24 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
+## v9.0.0 - 2026-08-24
+
+- Added five-fold honest validation for full 206-member rank-logit fusion plus
+  compressed completeness, missingness, and disagreement regime interactions.
+- Added stability pruning that selects 96 members inside three inner folds of
+  each outer-training split, preventing validation-fold selection leakage.
+- Added a source-family hierarchical ablation and leakage-free nested blends
+  against the v8 base prediction.
+- Selected raw fusion at **0.97042221 OOF AUC**, improving on v8 by
+  **0.00020356**, with positive fold gains from +0.00013099 to +0.00024923.
+- Rejected standalone hierarchical compression (0.97020103), stability pruning
+  (0.97023871), and all v8 blends because none beat raw fusion.
+- Recorded that both fusion logistic fits reached the fixed 1,000-iteration
+  limit on every fold; results are valid bounded-solver ablations rather than a
+  claim of full numerical convergence.
+- Generated and validated `submission_v9.csv` in the repository root. Public
+  leaderboard score is pending.
+
 ## v8.0.0 - 2026-08-24
 
 - Added an exact loader for 205 aligned public OOF/test prediction members from
