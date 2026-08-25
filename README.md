@@ -15,6 +15,7 @@ focuses on ranking quality rather than probability calibration.
 | v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | **0.96623** | `submission_v5.csv` |
 | v7.0.0 | Synthetic-value-encoded LightGBM | **0.968601 OOF** | **0.96983** | `submission_v7.csv` |
 | v8.0.0 | 205-member cross-fitted OOF meta-stack | **0.970219 OOF** | **0.97124** | `submission_v8.csv` |
+| v9.0.0 | Honestly validated rank-logit/regime fusion | **0.970422 OOF** | Pending | `submission_v9.csv` |
 
 V8 is the confirmed leaderboard champion at **0.97124**, improving on v7 by
 0.00141. Its +0.001618 OOF gain was positive on all five folds and transferred
@@ -38,6 +39,7 @@ numeric features, three categorical features, and substantial missingness.
 |-- train_v5.py          # Multi-seed-gated XGBoost pipeline
 |-- train_v7.py          # Synthetic-value encodings and deep LightGBM
 |-- train_v8.py          # Aligned public OOF library and logistic meta-stack
+|-- train_v9.py          # Rank-logit/regime fusion and honest ablations
 |-- analyze_shift.py     # Initial adversarial train-vs-test validation
 |-- docs/
 |   |-- EXPERIMENTS.md   # Experiment ledger and leaderboard results
@@ -89,6 +91,28 @@ The source notebook's final 0.97125 leaderboard file adds a much larger
 rank-logit and missingness-regime fusion fit designed for a Kaggle T4 GPU. That
 GPU-only layer is not represented as locally reproduced evidence here; v8's
 tracked validation result is the independently reproduced base stack.
+
+## Reproduce v9
+
+V9 honestly validates the reference notebook's fusion idea and two independent
+ablations on the same frozen seed-42 outer folds:
+
+```powershell
+python train_v9.py --candidates hierarchical,fusion,stability --resume
+```
+
+The selected fusion retains all 205 public members plus the cross-fitted v8
+base prediction in rank and logit space. Its regime model uses source-family
+summaries interacted with completeness, heavy-missingness, and disagreement
+indicators. Stability pruning selects 96 members using three inner folds of the
+outer-training rows only; hierarchical compression is evaluated separately.
+
+Raw fusion scores **0.97042221 OOF**, a +0.00020356 gain over v8, with positive
+gains on every fold. It passes the predeclared +0.0001/every-fold release gate
+and writes `artifacts/v9/full/submission_fusion.csv` plus root
+`submission_v9.csv`. Both fusion fits reached the fixed 1,000-iteration local
+solver cap on every fold, so that bounded-optimization limitation is retained
+in the experiment record.
 
 ## Reproduce v1
 

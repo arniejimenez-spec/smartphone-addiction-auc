@@ -203,3 +203,28 @@ champion. The +0.00161762 complete-OOF gain transferred closely, and every fold
 had already improved by at least 0.00155. This validates fold-safe public OOF
 stacking as the strongest ensemble step in the project so far and confirms that
 adding the highly correlated local v7 member was unnecessary.
+
+## V9 honest fusion policy
+
+V9 tests the source notebook's final fusion hypothesis without using its public
+leaderboard score as validation. The v8 cross-fitted prediction is appended to
+the frozen 205-member pool, and rank and clipped-logit views are fit entirely
+inside each seed-42 outer fold. A second logistic model adds source-family
+summaries and interactions for complete rows, heavily missing rows, and rows
+where member predictions disagree. Their validation and test predictions are
+converted to ranks and mixed 55/45.
+
+Two ablations guard against the idea that more columns alone explain the gain.
+Stability pruning recomputes member selection from three inner splits of each
+outer-training partition; it never observes the outer validation labels.
+Hierarchical compression replaces individuals with source-family summaries.
+Candidate/v8 blend weights are likewise selected from the other four outer
+folds before scoring the held-out fold.
+
+Raw fusion improves OOF AUC from 0.97021865 to 0.97042221 and is positive on all
+five folds. Stability pruning adds only 0.00002006, while hierarchical
+compression loses 0.00001762. The raw fusion therefore advances without a v8
+blend. Both fusion fits reached the fixed 1,000-iteration local `lbfgs` cap on
+each fold; this limitation is part of the model record and should be revisited
+with a converged GPU or more suitable large-scale solver before fine-grained
+coefficient interpretation.
