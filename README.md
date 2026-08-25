@@ -15,11 +15,14 @@ focuses on ranking quality rather than probability calibration.
 | v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | **0.96623** | `submission_v5.csv` |
 | v7.0.0 | Synthetic-value-encoded LightGBM | **0.968601 OOF** | **0.96983** | `submission_v7.csv` |
 | v8.0.0 | 205-member cross-fitted OOF meta-stack | **0.970219 OOF** | **0.97124** | `submission_v8.csv` |
-| v9.0.0 | Honestly validated rank-logit/regime fusion | **0.970422 OOF** | Pending | `submission_v9.csv` |
+| v9.0.0 | Honestly validated rank-logit/regime fusion | **0.970422 OOF** | 0.97123 | `submission_v9.csv` |
 
 V8 is the confirmed leaderboard champion at **0.97124**, improving on v7 by
 0.00141. Its +0.001618 OOF gain was positive on all five folds and transferred
 closely to the public leaderboard.
+
+V9 scored **0.97123**, effectively tying but not exceeding v8. V8 remains the
+confirmed champion by 0.00001.
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine

@@ -228,3 +228,11 @@ blend. Both fusion fits reached the fixed 1,000-iteration local `lbfgs` cap on
 each fold; this limitation is part of the model record and should be revisited
 with a converged GPU or more suitable large-scale solver before fine-grained
 coefficient interpretation.
+
+## V9 leaderboard outcome
+
+V9 scored **0.97123**, decreasing by 0.00001 from v8 despite its +0.00020356
+OOF gain. This is effectively tied at public leaderboard resolution, but it
+does not replace the 0.97124 incumbent. The next fusion experiment must use the
+full reference regime feature space and a converged GPU solver rather than
+further tuning the bounded local approximation.

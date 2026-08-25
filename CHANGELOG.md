@@ -19,7 +19,9 @@ added only after the corresponding submission is evaluated.
   limit on every fold; results are valid bounded-solver ablations rather than a
   claim of full numerical convergence.
 - Generated and validated `submission_v9.csv` in the repository root. Public
-  leaderboard score is pending.
+  leaderboard score: **0.97123**.
+- Outcome: effectively tied v8 but decreased by 0.00001, so v8 remains the
+  champion and v9 is retained as a non-promoting ablation.
 
 ## v8.0.0 - 2026-08-24
 

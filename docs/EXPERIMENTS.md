@@ -565,3 +565,10 @@ members.
 Raw fusion is selected and `submission_v9.csv` is promoted to the repository
 root. It is an honestly validated challenger; v8 remains the confirmed public
 leaderboard champion until v9 receives a competition score.
+
+### Leaderboard outcome
+
+V9 scored **0.97123**, 0.00001 below v8's 0.97124. The +0.00020356 local OOF
+gain did not transfer to a public-score improvement. The result is effectively
+a tie at public leaderboard precision, but the strict version policy retains
+v8 as champion and records v9 as non-promoting.
