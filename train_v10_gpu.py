@@ -65,6 +65,7 @@ class FitDiagnostics:
     blocks: int
     objective: float
     gradient_max_abs: float
+    gradient_tolerance: float
     parameter_change_max_abs: float
     directional_derivative: float
     converged: bool
@@ -243,6 +244,27 @@ def _optimizer_state(optimizer: Any) -> dict[str, Any]:
     return optimizer.state[first_parameter]
 
 
+def convergence_reason(
+    gradient_max: float,
+    gradient_tolerance: float,
+    previous_objective: float | None,
+    objective: float,
+    parameter_change: float,
+    differentiate_penalty: bool,
+) -> str | None:
+    """Return the audited reason a fit may stop, or ``None`` to continue."""
+    if gradient_max <= gradient_tolerance:
+        return f"first-order gradient tolerance <= {gradient_tolerance:.3e}"
+    if (
+        differentiate_penalty
+        and previous_objective is not None
+        and abs(previous_objective - objective) <= 1e-14
+        and parameter_change <= 1e-12
+    ):
+        return "certified objective-and-step tolerance"
+    return None
+
+
 def fit_gpu_logistic(
     name: str,
     x_train: np.ndarray,
@@ -255,6 +277,7 @@ def fit_gpu_logistic(
     allow_cpu: bool,
     resume: bool,
     differentiate_penalty: bool,
+    gradient_tolerance: float,
 ) -> tuple[np.ndarray, FitDiagnostics]:
     try:
         import torch
@@ -370,17 +393,17 @@ def fit_gpu_logistic(
             f"relative_change={relative_change:.3e}",
             flush=True,
         )
-        if gradient_max <= 1e-8:
+        reason = convergence_reason(
+            gradient_max,
+            gradient_tolerance,
+            previous_objective,
+            objective,
+            parameter_change,
+            differentiate_penalty,
+        )
+        if reason is not None:
             converged = True
-            stop_reason = "certified gradient tolerance"
-        elif (
-            differentiate_penalty
-            and previous_objective is not None
-            and abs(previous_objective - objective) <= 1e-14
-            and parameter_change <= 1e-12
-        ):
-            converged = True
-            stop_reason = "certified objective-and-step tolerance"
+            stop_reason = reason
 
         torch.save(
             {
@@ -395,6 +418,7 @@ def fit_gpu_logistic(
                 "stop_reason": stop_reason,
                 "objective": objective,
                 "gradient_max_abs": gradient_max,
+                "gradient_tolerance": gradient_tolerance,
                 "parameter_change_max_abs": parameter_change,
                 "directional_derivative": directional_derivative,
             },
@@ -429,6 +453,7 @@ def fit_gpu_logistic(
         blocks=blocks,
         objective=objective,
         gradient_max_abs=gradient_max,
+        gradient_tolerance=gradient_tolerance,
         parameter_change_max_abs=parameter_change,
         directional_derivative=directional_derivative,
         converged=converged,
@@ -485,6 +510,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "dual", train_dual, y, test_dual, output_dir,
         args.max_total_iter, args.block_iter, args.chunk_rows,
         args.allow_cpu, args.resume, not args.source_closure,
+        args.gradient_tolerance,
     )
 
     print(f"[{dt.datetime.now():%H:%M:%S}] building exact 1,653-column regime matrices", flush=True)
@@ -503,6 +529,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "regime", train_regime, y, test_regime, output_dir,
         args.max_total_iter, args.block_iter, args.chunk_rows,
         args.allow_cpu, args.resume, not args.source_closure,
+        args.gradient_tolerance,
     )
     del train_regime, test_regime
     gc.collect()
@@ -556,6 +583,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--max-total-iter", type=int, default=20000)
     parser.add_argument("--block-iter", type=int, default=250)
     parser.add_argument("--chunk-rows", type=int, default=131072)
+    parser.add_argument("--gradient-tolerance", type=float, default=5e-7)
     parser.add_argument("--resume", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--audit-only", action="store_true")
     parser.add_argument(
@@ -565,8 +593,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--allow-cpu", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
-    if args.max_total_iter <= 0 or args.block_iter <= 0 or args.chunk_rows <= 0:
-        parser.error("iteration and chunk sizes must be positive")
+    if (
+        args.max_total_iter <= 0
+        or args.block_iter <= 0
+        or args.chunk_rows <= 0
+        or args.gradient_tolerance <= 0
+    ):
+        parser.error("iteration, chunk, and tolerance values must be positive")
     if args.block_iter > args.max_total_iter:
         parser.error("--block-iter cannot exceed --max-total-iter")
     return args

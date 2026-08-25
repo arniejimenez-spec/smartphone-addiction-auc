@@ -23,6 +23,7 @@ def main() -> None:
         "    '--max-total-iter', '20000',\n"
         "    '--block-iter', '250',\n"
         "    '--chunk-rows', '131072',\n"
+        "    '--gradient-tolerance', '5e-7',\n"
         "]))\n"
     )
     notebook = {
@@ -38,8 +39,8 @@ def main() -> None:
                     "`public_pool_manifest.json`. Enable a GPU, then run all.\n",
                     "\n",
                     "The notebook writes `submission_v10.csv` only after both float64 "
-                    "LBFGS fits report convergence. Checkpoints and diagnostics are saved "
-                    "under `/kaggle/working`.\n",
+                    "LBFGS fits meet the audited `5e-7` first-order gradient tolerance. "
+                    "Checkpoints and diagnostics are saved under `/kaggle/working`.\n",
                 ],
             },
             {

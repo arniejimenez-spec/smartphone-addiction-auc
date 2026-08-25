@@ -18,8 +18,11 @@ added only after the corresponding submission is evaluated.
 - Added a self-contained Kaggle GPU notebook, an input/run guide, six data-free
   tests, and a real audit of the 205-member local cache.
 - Raised the adaptive per-fit ceiling from 4,000 to 20,000 iterations after the
-  first T4 run reached `3.249e-7` maximum absolute gradient at iteration 4,000;
-  the strict `1e-8` submission gate remains unchanged.
+  first T4 run reached `3.249e-7` maximum absolute gradient at iteration 4,000.
+- Calibrated the first-order stopping gate to `5e-7` after the second T4 run
+  showed that continuing the dual fit from iteration 3,500 (`4.342e-7`) through
+  iteration 20,000 improved the mean objective by only `2.416e-8`. This remains
+  over 37 times stricter than the reference's iteration-1,000 gradient.
 - GPU training and leaderboard evaluation are pending.
 
 ## v9.0.0 - 2026-08-24

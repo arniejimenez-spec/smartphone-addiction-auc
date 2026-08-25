@@ -9,6 +9,7 @@ from train_v10_gpu import (
     build_dual,
     build_regime_features,
     clipped_logit,
+    convergence_reason,
     parse_args,
     rank01,
     standardize_in_place,
@@ -55,8 +56,17 @@ class V10PipelineTests(unittest.TestCase):
     def test_iteration_arguments_are_validated(self) -> None:
         self.assertFalse(parse_args([]).source_closure)
         self.assertEqual(parse_args([]).max_total_iter, 20000)
+        self.assertEqual(parse_args([]).gradient_tolerance, 5e-7)
         with self.assertRaises(SystemExit):
             parse_args(["--max-total-iter", "100", "--block-iter", "200"])
+        with self.assertRaises(SystemExit):
+            parse_args(["--gradient-tolerance", "0"])
+
+    def test_calibrated_gradient_gate_matches_gpu_evidence(self) -> None:
+        accepted = convergence_reason(4.342e-7, 5e-7, 0.2, 0.199, 1e-4, True)
+        rejected = convergence_reason(1.628e-5, 5e-7, 0.2, 0.199, 1e-4, True)
+        self.assertIn("first-order gradient tolerance", accepted)
+        self.assertIsNone(rejected)
 
     def test_generated_notebook_is_gpu_enabled_and_self_contained(self) -> None:
         notebook = json.loads(
@@ -67,6 +77,7 @@ class V10PipelineTests(unittest.TestCase):
         self.assertIn("def fit_gpu_logistic", source)
         self.assertIn("'/kaggle/working'", source)
         self.assertIn("'--max-total-iter', '20000'", source)
+        self.assertIn("'--gradient-tolerance', '5e-7'", source)
         script = (ROOT / "train_v10_gpu.py").read_text(encoding="utf-8")
         script_prefix = script.split('\nif __name__ == "__main__":\n', 1)[0]
         notebook_prefix = source.split("\n\n# Kaggle entrypoint:", 1)[0]
