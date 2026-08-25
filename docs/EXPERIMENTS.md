@@ -572,3 +572,56 @@ V9 scored **0.97123**, 0.00001 below v8's 0.97124. The +0.00020356 local OOF
 gain did not transfer to a public-score improvement. The result is effectively
 a tie at public leaderboard precision, but the strict version policy retains
 v8 as champion and records v9 as non-promoting.
+
+## v10.0.0 - Exact converged GPU fusion
+
+Date started: 2026-08-25
+
+### Hypothesis
+
+V9 compressed the reference regime interactions to fit the local CPU machine
+and both logistic models reached their 1,000-iteration ceilings. V10 tests the
+remaining clean hypothesis: retain the exact 206-member, 412-column rank/logit
+matrix and full 1,653-column regime matrix, then optimize both in float64 until
+a numerical convergence condition is met on a Kaggle GPU.
+
+### Exact construction
+
+- 205 audited public members plus the five-fold v8 base prediction
+- 206 source columns independently half-ranked for OOF and test
+- 206 clipped-logit columns, producing 412 dual features
+- Dual features repeated for complete rows, rows missing at least four fields,
+  and standardized member-disagreement regimes
+- Five aggregate columns: mean, standard deviation, range, complete indicator,
+  and heavy-missingness indicator
+- Total regime width: **1,653**
+- Raw fusion: 55% ranked dual logits, 45% ranked regime logits
+- Selected reference-style output: 70% ranked fusion, 30% v8 base prediction
+
+### Convergence and reproducibility gate
+
+The optimizer uses full-batch float64 PyTorch LBFGS with strong-Wolfe line
+search. Training is divided into 250-iteration blocks with checkpoints and a
+4,000-iteration initial budget. Each block records the objective, maximum
+absolute gradient, maximum parameter step, directional derivative, closure
+count, and elapsed time. A submission is written only after both fits meet the
+gradient, parameter-change, or objective-change tolerance.
+
+The selected closure differentiates the declared L2 term, yielding a consistent
+`C=3.5` objective. A smoke test showed why this matters: the source closure,
+which returns the penalty without differentiating it, can produce a zero
+strong-Wolfe step while its gradient is still too large. An explicit
+`--source-closure` mode remains available for reproduction, but it is not the
+selected convergence-gated run.
+
+### Input audit
+
+- Training rows: 691,369
+- Test rows: 296,302
+- Audited members: 205 unique names
+- OOF cache shape: `(691369, 205)`
+- Test cache shape: `(296302, 205)`
+- All cached values finite
+
+GPU execution, convergence diagnostics, submission checksum, and leaderboard
+score remain pending.

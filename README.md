@@ -16,6 +16,7 @@ focuses on ranking quality rather than probability calibration.
 | v7.0.0 | Synthetic-value-encoded LightGBM | **0.968601 OOF** | **0.96983** | `submission_v7.csv` |
 | v8.0.0 | 205-member cross-fitted OOF meta-stack | **0.970219 OOF** | **0.97124** | `submission_v8.csv` |
 | v9.0.0 | Honestly validated rank-logit/regime fusion | **0.970422 OOF** | 0.97123 | `submission_v9.csv` |
+| v10.0.0 | Exact converged GPU rank-logit/regime fusion | GPU run pending | Pending | `submission_v10.csv` |
 
 V8 is the confirmed leaderboard champion at **0.97124**, improving on v7 by
 0.00141. Its +0.001618 OOF gain was positive on all five folds and transferred
@@ -43,6 +44,8 @@ numeric features, three categorical features, and substantial missingness.
 |-- train_v7.py          # Synthetic-value encodings and deep LightGBM
 |-- train_v8.py          # Aligned public OOF library and logistic meta-stack
 |-- train_v9.py          # Rank-logit/regime fusion and honest ablations
+|-- train_v10_gpu.py     # Exact full-regime float64 Kaggle GPU fit
+|-- kaggle/              # Self-contained v10 notebook and run instructions
 |-- analyze_shift.py     # Initial adversarial train-vs-test validation
 |-- docs/
 |   |-- EXPERIMENTS.md   # Experiment ledger and leaderboard results
@@ -116,6 +119,28 @@ and writes `artifacts/v9/full/submission_fusion.csv` plus root
 `submission_v9.csv`. Both fusion fits reached the fixed 1,000-iteration local
 solver cap on every fold, so that bounded-optimization limitation is retained
 in the experiment record.
+
+## Run v10 on Kaggle GPU
+
+V10 replaces v9's compressed local regime model with the exact 1,653-column
+reference feature space and a resumable float64 GPU solver. It trains in
+250-iteration blocks, saves checkpoints, records objective/gradient/step
+diagnostics, and refuses to write a submission until both fits converge.
+
+First verify the local cache:
+
+```powershell
+python train_v10_gpu.py --audit-only
+```
+
+Then import [the self-contained Kaggle notebook](kaggle/v10_exact_gpu_fusion.ipynb),
+attach the competition plus a private dataset containing the three v8 cache
+files, enable a GPU, and run all cells. Exact upload and download instructions
+are in [the v10 run guide](kaggle/V10_RUN.md).
+
+The selected output is `submission_v10.csv`, matching the reference's 70%
+fusion / 30% base blend. `submission_v10_mix.csv` is also retained as the raw
+fusion ablation. V10 remains an unscored candidate until the GPU run completes.
 
 ## Reproduce v1
 

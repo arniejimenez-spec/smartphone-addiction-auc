@@ -3,6 +3,22 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
+## v10.0.0 - In development
+
+- Added the exact 206-member rank-logit construction and full 1,653-column
+  completeness, heavy-missingness, and disagreement regime feature space.
+- Added a float64 PyTorch LBFGS GPU solver that trains in resumable blocks,
+  checkpoints every block, and records objective, gradient, step, and
+  convergence diagnostics.
+- Corrected the reference closure so the declared L2 penalty contributes to
+  both the gradient and objective; retained the defective source closure only
+  as an explicit, non-default reproduction mode.
+- Added a strict output gate: `submission_v10.csv` is not written unless both
+  the dual and regime fits meet a numerical convergence criterion.
+- Added a self-contained Kaggle GPU notebook, an input/run guide, six data-free
+  tests, and a real audit of the 205-member local cache.
+- GPU training and leaderboard evaluation are pending.
+
 ## v9.0.0 - 2026-08-24
 
 - Added five-fold honest validation for full 206-member rank-logit fusion plus
