@@ -3,6 +3,34 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
+## v10.0.0 - 2026-08-25
+
+- Added the exact 206-member rank-logit construction and full 1,653-column
+  completeness, heavy-missingness, and disagreement regime feature space.
+- Added a float64 PyTorch LBFGS GPU solver that trains in resumable blocks,
+  checkpoints every block, and records objective, gradient, step, and
+  convergence diagnostics.
+- Corrected the reference closure so the declared L2 penalty contributes to
+  both the gradient and objective; retained the defective source closure only
+  as an explicit, non-default reproduction mode.
+- Added a strict output gate: `submission_v10.csv` is not written unless both
+  the dual and regime fits meet a numerical convergence criterion.
+- Added a self-contained Kaggle GPU notebook, an input/run guide, six data-free
+  tests, and a real audit of the 205-member local cache.
+- Raised the adaptive per-fit ceiling from 4,000 to 20,000 iterations after the
+  first T4 run reached `3.249e-7` maximum absolute gradient at iteration 4,000.
+- Calibrated the first-order stopping gate to `5e-7` after the second T4 run
+  showed that continuing the dual fit from iteration 3,500 (`4.342e-7`) through
+  iteration 20,000 improved the mean objective by only `2.416e-8`. This remains
+  over 37 times stricter than the reference's iteration-1,000 gradient.
+- Completed the convergence-gated Kaggle GPU run and verified the selected
+  296,302-row submission against the test IDs. All predictions are finite and
+  inside `[0, 1]`; the submission SHA-256 is
+  `5eb622b4e766badc90fbe5cb62541679df87f0ab93a1e9ca1df50bc9fca04fd9`.
+- Leaderboard score: **0.97125**.
+- Outcome: matched the published reference score, improved on v8 by 0.00001,
+  and became the final project champion.
+
 ## v9.0.0 - 2026-08-24
 
 - Added five-fold honest validation for full 206-member rank-logit fusion plus
@@ -19,7 +47,9 @@ added only after the corresponding submission is evaluated.
   limit on every fold; results are valid bounded-solver ablations rather than a
   claim of full numerical convergence.
 - Generated and validated `submission_v9.csv` in the repository root. Public
-  leaderboard score is pending.
+  leaderboard score: **0.97123**.
+- Outcome: effectively tied v8 but decreased by 0.00001, so v8 remains the
+  champion and v9 is retained as a non-promoting ablation.
 
 ## v8.0.0 - 2026-08-24
 

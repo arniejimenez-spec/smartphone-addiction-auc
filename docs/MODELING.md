@@ -228,3 +228,40 @@ blend. Both fusion fits reached the fixed 1,000-iteration local `lbfgs` cap on
 each fold; this limitation is part of the model record and should be revisited
 with a converged GPU or more suitable large-scale solver before fine-grained
 coefficient interpretation.
+
+## V9 leaderboard outcome
+
+V9 scored **0.97123**, decreasing by 0.00001 from v8 despite its +0.00020356
+OOF gain. This is effectively tied at public leaderboard resolution, but it
+does not replace the 0.97124 incumbent. The next fusion experiment must use the
+full reference regime feature space and a converged GPU solver rather than
+further tuning the bounded local approximation.
+
+## V10 full-regime GPU policy
+
+V10 is deliberately narrow: it changes the two v9 limitations rather than
+searching more blends. The model restores all 1,653 reference regime columns
+and moves the convex logistic fits to float64 GPU LBFGS. The feature formula,
+`C=3.5`, 55/45 internal fusion, and 70/30 final reference blend are frozen
+before the GPU run.
+
+Optimizer iterations alone are not accepted as evidence of completion. Each
+fit must satisfy a recorded gradient, parameter-step, or objective-change
+tolerance. Checkpoints make the iteration budget extendable without restarting
+the converged base refit or silently accepting a capped solution. The final
+`submission_v10.csv` is output-gated on convergence of both components.
+
+The selected v10 closure differentiates the L2 penalty, producing the intended
+regularized objective. The reference returned that penalty without adding its
+gradient; a local smoke test demonstrated that this inconsistency can yield a
+zero line-search step before the gradient is acceptably small. An explicit
+`--source-closure` option preserves the defect for reproduction, but its output
+is not silently treated as a convergence-certified submission.
+
+## V10 leaderboard outcome
+
+The convergence-gated v10 run completed on Kaggle and the selected 70% fusion /
+30% base submission scored **0.97125**. This is 0.00001 above v8 and exactly
+matches the published reference score. V10 therefore becomes the final
+champion; v8 remains the strongest independently cross-fitted local validation
+result and v9 remains the honest compressed-regime ablation.

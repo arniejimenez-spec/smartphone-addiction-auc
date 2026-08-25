@@ -15,11 +15,13 @@ focuses on ranking quality rather than probability calibration.
 | v5.0.0 | Five-fold standalone XGBoost | **0.964712 OOF** | **0.96623** | `submission_v5.csv` |
 | v7.0.0 | Synthetic-value-encoded LightGBM | **0.968601 OOF** | **0.96983** | `submission_v7.csv` |
 | v8.0.0 | 205-member cross-fitted OOF meta-stack | **0.970219 OOF** | **0.97124** | `submission_v8.csv` |
-| v9.0.0 | Honestly validated rank-logit/regime fusion | **0.970422 OOF** | Pending | `submission_v9.csv` |
+| v9.0.0 | Honestly validated rank-logit/regime fusion | **0.970422 OOF** | 0.97123 | `submission_v9.csv` |
+| v10.0.0 | Exact converged GPU rank-logit/regime fusion | Convergence gate passed | **0.97125** | `submission_v10.csv` |
 
-V8 is the confirmed leaderboard champion at **0.97124**, improving on v7 by
-0.00141. Its +0.001618 OOF gain was positive on all five folds and transferred
-closely to the public leaderboard.
+V10 is the final leaderboard champion at **0.97125**. It improves on v8 by
+0.00001 and matches the published reference score using the exact 206-member,
+1,653-column GPU fusion. V9 scored **0.97123** and is retained as the honestly
+validated local ablation rather than the selected release.
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine
@@ -40,6 +42,8 @@ numeric features, three categorical features, and substantial missingness.
 |-- train_v7.py          # Synthetic-value encodings and deep LightGBM
 |-- train_v8.py          # Aligned public OOF library and logistic meta-stack
 |-- train_v9.py          # Rank-logit/regime fusion and honest ablations
+|-- train_v10_gpu.py     # Exact full-regime float64 Kaggle GPU fit
+|-- kaggle/              # Self-contained v10 notebook and run instructions
 |-- analyze_shift.py     # Initial adversarial train-vs-test validation
 |-- docs/
 |   |-- EXPERIMENTS.md   # Experiment ledger and leaderboard results
@@ -113,6 +117,31 @@ and writes `artifacts/v9/full/submission_fusion.csv` plus root
 `submission_v9.csv`. Both fusion fits reached the fixed 1,000-iteration local
 solver cap on every fold, so that bounded-optimization limitation is retained
 in the experiment record.
+
+## Run v10 on Kaggle GPU
+
+V10 replaces v9's compressed local regime model with the exact 1,653-column
+reference feature space and a resumable float64 GPU solver. It trains in
+250-iteration blocks, saves checkpoints, records objective/gradient/step
+diagnostics, and refuses to write a submission until both fits converge.
+
+First verify the local cache:
+
+```powershell
+python train_v10_gpu.py --audit-only
+```
+
+Then import [the self-contained Kaggle notebook](kaggle/v10_exact_gpu_fusion.ipynb),
+attach the competition plus a private dataset containing the three v8 cache
+files, enable a GPU, and run all cells. Exact upload and download instructions
+are in [the v10 run guide](kaggle/V10_RUN.md).
+
+The selected output is `submission_v10.csv`, matching the reference's 70%
+fusion / 30% base blend. `submission_v10_mix.csv` is also retained as the raw
+fusion ablation. The convergence-gated Kaggle run completed successfully and
+the selected submission scored **0.97125**, making v10 the final champion.
+The released CSV contains 296,302 test IDs and has SHA-256
+`5eb622b4e766badc90fbe5cb62541679df87f0ab93a1e9ca1df50bc9fca04fd9`.
 
 ## Reproduce v1
 
