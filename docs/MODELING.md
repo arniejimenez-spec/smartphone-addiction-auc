@@ -257,3 +257,11 @@ gradient; a local smoke test demonstrated that this inconsistency can yield a
 zero line-search step before the gradient is acceptably small. An explicit
 `--source-closure` option preserves the defect for reproduction, but its output
 is not silently treated as a convergence-certified submission.
+
+## V10 leaderboard outcome
+
+The convergence-gated v10 run completed on Kaggle and the selected 70% fusion /
+30% base submission scored **0.97125**. This is 0.00001 above v8 and exactly
+matches the published reference score. V10 therefore becomes the final
+champion; v8 remains the strongest independently cross-fitted local validation
+result and v9 remains the honest compressed-regime ablation.

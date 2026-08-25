@@ -3,7 +3,7 @@
 All notable modeling releases are documented here. Leaderboard scores are
 added only after the corresponding submission is evaluated.
 
-## v10.0.0 - In development
+## v10.0.0 - 2026-08-25
 
 - Added the exact 206-member rank-logit construction and full 1,653-column
   completeness, heavy-missingness, and disagreement regime feature space.
@@ -23,7 +23,13 @@ added only after the corresponding submission is evaluated.
   showed that continuing the dual fit from iteration 3,500 (`4.342e-7`) through
   iteration 20,000 improved the mean objective by only `2.416e-8`. This remains
   over 37 times stricter than the reference's iteration-1,000 gradient.
-- GPU training and leaderboard evaluation are pending.
+- Completed the convergence-gated Kaggle GPU run and verified the selected
+  296,302-row submission against the test IDs. All predictions are finite and
+  inside `[0, 1]`; the submission SHA-256 is
+  `5eb622b4e766badc90fbe5cb62541679df87f0ab93a1e9ca1df50bc9fca04fd9`.
+- Leaderboard score: **0.97125**.
+- Outcome: matched the published reference score, improved on v8 by 0.00001,
+  and became the final project champion.
 
 ## v9.0.0 - 2026-08-24
 

@@ -623,5 +623,24 @@ selected convergence-gated run.
 - Test cache shape: `(296302, 205)`
 - All cached values finite
 
-GPU execution, convergence diagnostics, submission checksum, and leaderboard
-score remain pending.
+### GPU execution and leaderboard outcome
+
+The final Kaggle T4 run completed successfully with the calibrated `5e-7`
+first-order stopping tolerance. Because output generation is gated in code,
+the presence of `submission_v10.csv` certifies that both the dual and regime
+fits satisfied the declared numerical convergence policy. The Kaggle output
+also retains `result_v10.json` and both model checkpoints for audit.
+
+The selected file passed the local submission audit:
+
+- Rows: **296,302**
+- IDs: exact match to `test.csv`, in original order, with no duplicates
+- Prediction range: `1.6874675162503125e-06` to `0.9999983125324836`
+- Mean prediction: `0.5`
+- SHA-256: `5eb622b4e766badc90fbe5cb62541679df87f0ab93a1e9ca1df50bc9fca04fd9`
+- Public leaderboard AUC: **0.97125**
+
+V10 improves on v8 by 0.00001, matches the published reference score, and is
+the final project champion. The result also supports the narrow v10 hypothesis:
+the remaining gain required the exact full-regime, convergence-certified GPU
+fit rather than more tuning of the bounded local approximation.

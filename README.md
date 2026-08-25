@@ -16,14 +16,12 @@ focuses on ranking quality rather than probability calibration.
 | v7.0.0 | Synthetic-value-encoded LightGBM | **0.968601 OOF** | **0.96983** | `submission_v7.csv` |
 | v8.0.0 | 205-member cross-fitted OOF meta-stack | **0.970219 OOF** | **0.97124** | `submission_v8.csv` |
 | v9.0.0 | Honestly validated rank-logit/regime fusion | **0.970422 OOF** | 0.97123 | `submission_v9.csv` |
-| v10.0.0 | Exact converged GPU rank-logit/regime fusion | GPU run pending | Pending | `submission_v10.csv` |
+| v10.0.0 | Exact converged GPU rank-logit/regime fusion | Convergence gate passed | **0.97125** | `submission_v10.csv` |
 
-V8 is the confirmed leaderboard champion at **0.97124**, improving on v7 by
-0.00141. Its +0.001618 OOF gain was positive on all five folds and transferred
-closely to the public leaderboard.
-
-V9 scored **0.97123**, effectively tying but not exceeding v8. V8 remains the
-confirmed champion by 0.00001.
+V10 is the final leaderboard champion at **0.97125**. It improves on v8 by
+0.00001 and matches the published reference score using the exact 206-member,
+1,653-column GPU fusion. V9 scored **0.97123** and is retained as the honestly
+validated local ablation rather than the selected release.
 
 The v1 validation score uses a fixed 80/20 stratified holdout with seed 42.
 The competition data has 691,369 training rows, 296,302 test rows, nine
@@ -140,7 +138,10 @@ are in [the v10 run guide](kaggle/V10_RUN.md).
 
 The selected output is `submission_v10.csv`, matching the reference's 70%
 fusion / 30% base blend. `submission_v10_mix.csv` is also retained as the raw
-fusion ablation. V10 remains an unscored candidate until the GPU run completes.
+fusion ablation. The convergence-gated Kaggle run completed successfully and
+the selected submission scored **0.97125**, making v10 the final champion.
+The released CSV contains 296,302 test IDs and has SHA-256
+`5eb622b4e766badc90fbe5cb62541679df87f0ab93a1e9ca1df50bc9fca04fd9`.
 
 ## Reproduce v1
 
